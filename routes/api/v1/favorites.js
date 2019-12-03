@@ -14,7 +14,7 @@ router.get('/', (request, response) => {
       response.status(200).send(favorites)
     } else {
       response.status(404).json({
-        error: 'Record not found.'
+        error: 'Not found.'
       })
     }
     })
@@ -27,7 +27,7 @@ router.get('/:id', (request, response) => {
       response.status(200).send(favorite)
     } else {
       response.status(404).json({
-        error: 'Not found.'
+        error: 'Record not found.'
       })
     }
   })

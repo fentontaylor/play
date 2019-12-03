@@ -13,13 +13,21 @@ router.get('/', (request, response) => {
 
 router.post('/', (request, response) => {
   var body = request.body;
-
+  
   for (let requiredParam of ['title', 'artistName', 'rating']) {
     if (!body[requiredParam]) {
       return response
-        .status(400)
-        .send({ error: `Missing required attribute <${requiredParam}>` });
+      .status(400)
+      .send({ error: `Missing required attribute <${requiredParam}>` });
     }
+  }
+  
+  var rating = parseInt(request.body.rating)
+  
+  if (!(rating >= 1 && rating <= 100)) {
+    return response
+      .status(400)
+      .send({ error: "Rating must be between 1-100" })
   }
 
   var fav = new Favorite(body);

@@ -59,6 +59,7 @@ describe("Test POST to favorites", () => {
   })
 
   it("sad path: missing required attribute", async ()=> {
+    // Missing <title>
     var body = {
       "id": 1,
       "artistName": "Queen",
@@ -73,6 +74,7 @@ describe("Test POST to favorites", () => {
     expect(res.statusCode).toBe(400)
     expect(res.body).toMatchObject({ error: 'Missing required attribute <title>' })
 
+    // Missing <artistName>
     var body = {
       "id": 1,
       "title": "We Will Rock You",
@@ -87,6 +89,7 @@ describe("Test POST to favorites", () => {
     expect(res.statusCode).toBe(400)
     expect(res.body).toMatchObject({ error: 'Missing required attribute <artistName>' })
 
+    // Missing <rating>
     var body = {
       "id": 1,
       "title": "We Will Rock You",
@@ -100,5 +103,55 @@ describe("Test POST to favorites", () => {
 
     expect(res.statusCode).toBe(400)
     expect(res.body).toMatchObject({ error: 'Missing required attribute <rating>' })
+  })
+
+  it("sad path: rating not in range 1-100", async ()=> {
+    // rating < 1
+    var body = {
+      "id": 1,
+      "title": "We Will Rock You",
+      "artistName": "Queen",
+      "genre": "Rock",
+      "rating": -5
+    };
+
+    var res = await request(app)
+      .post("/api/v1/favorites")
+      .send(body);
+
+    expect(res.statusCode).toBe(400)
+    expect(res.body).toMatchObject({ error: "Rating must be between 1-100" })
+
+    // rating > 100
+    var body = {
+      "id": 1,
+      "title": "We Will Rock You",
+      "artistName": "Queen",
+      "genre": "Rock",
+      "rating": 230
+    };
+
+    var res = await request(app)
+      .post("/api/v1/favorites")
+      .send(body);
+
+    expect(res.statusCode).toBe(400)
+    expect(res.body).toMatchObject({ error: "Rating must be between 1-100" })
+
+    // rating is NaN
+    var body = {
+      "id": 1,
+      "title": "We Will Rock You",
+      "artistName": "Queen",
+      "genre": "Rock",
+      "rating": 'askjdf'
+    };
+
+    var res = await request(app)
+      .post("/api/v1/favorites")
+      .send(body);
+
+    expect(res.statusCode).toBe(400)
+    expect(res.body).toMatchObject({ error: "Rating must be between 1-100" })
   })
 })

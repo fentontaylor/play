@@ -36,18 +36,16 @@ describe("Test POST to favorites", () => {
     expect(res.body).toHaveProperty('rating');
 
     const fav = await database('favorites').first();
-    expect(fav.title).toBe(body.title);
-    expect(fav.artist_name).toBe(body.artistName);
-    expect(fav.genre).toBe(body.genre);
-    expect(fav.rating).toBe(body.rating);
+    expect(fav.title).toBe("We Will Rock You");
+    expect(fav.artist_name).toBe("Queen");
+    expect(fav.genre).toBe("Arena Rock");
+    expect(fav.rating).toBe(79);
   })
 
   it("happy path with default genre", async ()=> {
     const body = {
-      "id": 1,
-      "title": "We Will Rock You",
-      "artistName": "Queen",
-      "rating": 88
+      "title": "Under Pressure",
+      "artistName": "Vanilla Ice vs. Queen Bowie"
     };
 
     const res = await request(app)

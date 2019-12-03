@@ -5,6 +5,7 @@ const environment = process.env.NODE_ENV || 'development';
 const configuration = require('../../../knexfile')[environment];
 const database = require('knex')(configuration);
 const Favorite = require("../../../models/favorite");
+const MusixService = require("../../../services/musixService");
 
 router.get('/', (request, response) => {
   favoriteSongs()
@@ -26,23 +27,19 @@ router.post('/', (request, response) => {
     }
   }
 
-  // var rating = parseInt(request.body.rating)
+  const service = new MusixService(title, artist);
 
-  // if (!(rating >= 1 && rating <= 100)) {
-  //   return response
-  //     .status(400)
-  //     .send({ error: "Rating must be between 1-100" })
-  // }
-
-  fetchSongInfo(title, artist)
+  service.fetchSongInfo(title, artist)
   .then(res => {
-    console.log(res);
     var fav = new Favorite(res);
 
     database('favorites')
       .insert(fav, 'id')
-      .returning('id')
-      .then(id => response.status(201).send({ id: id[0] }))
+      .returning('*')
+      .then(attr => {
+        console.log(attr[0]);
+        response.status(201).send(attr[0])
+      })
       .catch(error => response.status(500).send({ error }))
   })
 });

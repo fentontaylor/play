@@ -32,6 +32,7 @@ describe("Test POST to favorites", () => {
       .send(body);
 
     expect(res.statusCode).toBe(201);
+    expect(res.body).toHaveProperty('id');
 
     const fav = await database('favorites').first();
     expect(fav.title).toBe(body.title);

@@ -14,6 +14,13 @@ router.get('/', (request, response) => {
     })
 });
 
+router.get('/:id', (request, response) => {
+  favoriteSong(request.params.id)
+    .then(favorite => {
+      response.status(200).send(favorite)
+    })
+});
+
 router.post('/', (request, response) => {
   var body = request.body;
 
@@ -50,6 +57,12 @@ async function favoriteSongs() {
   }
 }
 
-
+async function favoriteSong(songId) {
+  try{
+    return await database('favorites').where({id: songId});
+  }catch(e){
+    return e;
+  }
+}
 
 module.exports = router;

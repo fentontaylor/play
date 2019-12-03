@@ -23,8 +23,20 @@ describe("Test POST to favorites", () => {
       "genre": "Rock",
       "rating": 88
     }
-    const res = await request(app).post("/api/v1/favorites", body)
 
-    expect(res.statusCode).toBe(201)
+    const noFavs = await database('favorites').first()
+    expect(noFavs).toBeUndefined();
+
+    const res = await request(app)
+      .post("/api/v1/favorites")
+      .send(body);
+
+    expect(res.statusCode).toBe(201);
+
+    const fav = await database('favorites').first();
+    expect(fav.title).toBe(body.title);
+    expect(fav.artist_name).toBe(body.artistName);
+    expect(fav.genre).toBe(body.genre);
+    expect(fav.rating).toBe(body.rating);
   })
 })

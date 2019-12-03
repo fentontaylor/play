@@ -36,4 +36,13 @@ describe("Test GET favorites/:id", () => {
     expect(response.body[0].artist_name).toBe('Toto')
     expect(response.body[0].title).toBe('Africa')
   });
+
+  it("returns a 404 if id is not found", async () => {
+
+    var response = await request(app)
+    .get('/api/v1/favorites/1')
+
+    expect(response.status).toBe(404)
+    expect(response.body.error).toBe('Record not found.')
+  });
 });

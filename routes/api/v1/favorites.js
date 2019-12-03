@@ -35,7 +35,7 @@ router.post('/', (request, response) => {
 
     database('favorites')
       .insert(fav, 'id')
-      .returning('*')
+      .returning(['id', 'title', 'artist_name', 'genre', 'rating'])
       .then(attr => {
         console.log(attr[0]);
         response.status(201).send(attr[0])

@@ -10,4 +10,9 @@ router.get('/', (request, response) => {
   
 });
 
+router.post('/', (request, response) => {
+  console.log(request.body);
+  response.status(201).send();
+});
+
 module.exports = router;

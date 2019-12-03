@@ -4,6 +4,7 @@ var router = express.Router();
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('../../../knexfile')[environment];
 const database = require('knex')(configuration);
+const Favorite = require("../../../models/favorite");
 
 
 router.get('/', (request, response) => {
@@ -11,10 +12,7 @@ router.get('/', (request, response) => {
 });
 
 router.post('/', (request, response) => {
-  var body = request.body;
-  body.artist_name = body.artistName;
-  delete body.id;
-  delete body.artistName;
+  var body = new Favorite(request.body);
 
   database('favorites')
     .insert(body, 'id')

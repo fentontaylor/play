@@ -17,11 +17,8 @@ describe("Test POST to favorites", () => {
 
   it("happy path", async () => {
     const body = {
-      "id": 1,
       "title": "We Will Rock You",
-      "artistName": "Queen",
-      "genre": "Rock",
-      "rating": 88
+      "artistName": "Queen"
     };
 
     const noFavs = await database('favorites').first()
@@ -33,6 +30,10 @@ describe("Test POST to favorites", () => {
 
     expect(res.statusCode).toBe(201);
     expect(res.body).toHaveProperty('id');
+    expect(res.body).toHaveProperty('title');
+    expect(res.body).toHaveProperty('artist_name');
+    expect(res.body).toHaveProperty('genre');
+    expect(res.body).toHaveProperty('rating');
 
     const fav = await database('favorites').first();
     expect(fav.title).toBe(body.title);
@@ -62,10 +63,7 @@ describe("Test POST to favorites", () => {
   it("sad path: missing required attribute", async ()=> {
     // Missing <title>
     var body = {
-      "id": 1,
       "artistName": "Queen",
-      "genre": "Rock",
-      "rating": 88
     };
 
     var res = await request(app)
@@ -77,10 +75,7 @@ describe("Test POST to favorites", () => {
 
     // Missing <artistName>
     var body = {
-      "id": 1,
-      "title": "We Will Rock You",
-      "genre": "Rock",
-      "rating": 88
+      "title": "We Will Rock You"
     };
 
     var res = await request(app)

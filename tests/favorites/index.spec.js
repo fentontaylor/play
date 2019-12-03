@@ -17,7 +17,7 @@ describe("Test GET favorites", () => {
     await database.raw("TRUNCATE TABLE favorites CASCADE");
   });
 
-  it("returns a list of all favorites in the db", async () => {
+  it.skip("returns a list of all favorites in the db", async () => {
     let fave_1 = new Favorite({id: 1, title: 'Thunderstruck', artistName: 'AC/DC', genre: 'Rock', rating: 98})
 
     let fave_2 = new Favorite({id: 2, title: 'Africa', artistName: 'Toto', genre: 'pop', rating: 100})

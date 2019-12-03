@@ -37,7 +37,6 @@ router.post('/', (request, response) => {
       .insert(fav, 'id')
       .returning(['id', 'title', 'artist_name', 'genre', 'rating'])
       .then(attr => {
-        console.log(attr[0]);
         response.status(201).send(attr[0])
       })
       .catch(error => response.status(500).send({ error }))

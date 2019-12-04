@@ -55,7 +55,7 @@ https://looney-tunes.herokuapp.com
 - [POST /api/v1/favorites](#post_favorites)
 - [GET /api/v1/favorites](#get_favorites)
 - [GET /api/v1/favorites/:id](#get_favorite)
-- [DELETE /api/v1/favorites](#delete_favorite)
+- [DELETE /api/v1/favorites/:id](#delete_favorite)
 
 
 ### Add Favorites Request
@@ -186,24 +186,19 @@ Status: 404
 ### Delete Favorite Request
 
 ```
-DELETE /api/v1/favorites
+DELETE /api/v1/favorites/3
 ```
- DELETE request is required to pass an `id` in a JSON body.
-
 #### Example
 ```
-DELETE https://looney-tunes.herokuapp.com/api/v1/favorites
-body:
-{
-  "id": 3
-}
+DELETE https://looney-tunes.herokuapp.com/api/v1/favorites/3
+
 ```
 **Success Response**
 ```
 Status: 204
 ```
 **Error Responses**
-If the id does not exist in the database or is passed incorrectly, a response like the following will be sent:
+If the id does not exist in the database a response like the following will be sent:
 ```
 Status: 404
 

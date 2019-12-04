@@ -41,8 +41,8 @@ router.post('/', (request, response) => {
   for (let requiredParam of ['title', 'artistName']) {
     if (!body[requiredParam]) {
       return response
-      .status(400)
-      .send({ error: `Missing required attribute <${requiredParam}>` });
+        .status(400)
+        .send({ error: `Missing required attribute <${requiredParam}>` });
     }
   }
 
@@ -71,12 +71,12 @@ router.delete('/', (request, response) => {
         .then(targetDestroyed => {
           response.status(204).send()
         })
-    } else {
-      response.status(404).json({
-        error: 'Record not found.'
-      })
-    }
-  })
+      } else {
+        response.status(404).json({
+          error: 'Record not found.'
+        })
+      }
+    })
 });
 
 

@@ -53,15 +53,18 @@ https://looney-tunes.herokuapp.com
 ```
 #### Endpoints:
 - [POST /api/v1/favorites](#post_favorites)
+- [GET /api/v1/favorites](#get_favorites)
+- [GET /api/v1/favorites/:id](#get_favorite)
+- [DELETE /api/v1/favorites](#delete_favorite)
 
 
-### Add Favorites Request <a name="post_forecast"></a>
+### Add Favorites Request
 
 ```
 POST /api/v1/favorites
 ```
 POST request must have a JSON body with the required attributes `title`, `artistName`, and `rating`. `genre` attribute is optional, and if not provided, will default to 'Unknown'. The `rating` must be an integer between 1-100.
- 
+
 #### Example
 ```
 POST https://looney-tunes.herokuapp.com/api/v1/favorites
@@ -99,21 +102,131 @@ Status: 400
   "error": "Rating must be an integer between 1-100"
 }
 ```
+### Get Favorites Request
+
+```
+GET /api/v1/favorites
+```
+
+#### Example
+```
+GET https://looney-tunes.herokuapp.com/api/v1/favorites
+
+```
+**Success Response**
+```
+[
+  {
+    id: 1,
+    title: "Africa",
+    artist_name: "Toto",
+    genre: "pop",
+    rating: 88
+  },
+  {
+    id: 2,
+    title: "Welcome To The Jungle",
+    artist_name: "Guns N' Roses",
+    genre: "rock",
+    rating: 90
+  },
+  {
+    id: 3,
+    title: "Never Gonna Give You Up",
+    artist_name: "Rick Astley",
+    genre: "dance-pop",
+    rating: 100
+  }
+]
+```
+**Error Responses**
+If there are no favorites in the database, a response like the following will be sent:
+```
+Status: 404
+
+{
+  "error": "Not found."
+}
+```
+
+### Get Favorite Request
+
+```
+GET /api/v1/favorites/:id
+```
+GET request will have the id passed in the URL like in the example below.
+
+#### Example
+```
+GET https://looney-tunes.herokuapp.com/api/v1/favorites/3
+
+```
+**Success Response**
+```
+[
+  {
+    id: 3,
+    title: "Never Gonna Give You Up",
+    artist_name: "Rick Astley",
+    genre: "dance-pop",
+    rating: 100
+  }
+]
+```
+**Error Responses**
+If the id does not exist in the database, a response like the following will be sent:
+```
+Status: 404
+
+{
+  "error": "Record not found."
+}
+```
+
+### Delete Favorite Request
+
+```
+DELETE /api/v1/favorites
+```
+ DELETE request is required to pass an `id` in a JSON body.
+
+#### Example
+```
+DELETE https://looney-tunes.herokuapp.com/api/v1/favorites
+body:
+{
+  "id": 3
+}
+```
+**Success Response**
+```
+Status: 204
+```
+**Error Responses**
+If the id does not exist in the database or is passed incorrectly, a response like the following will be sent:
+```
+Status: 404
+
+{
+  "error": "Record not found."
+}
+```
 
 ## Schema Design <a name="schema"></a>
 
 
 ## Tech Stack <a name="stack"></a>
 - [Node.js](https://nodejs.org/en/)
+- [Express](https://expressjs.com/)
 - [knex](https://www.npmjs.com/package/knex)
 - [PostgreSQL](https://www.postgresql.org/)
 - [Heroku](heroku.com)
 
 ## Contributors <a name="contributors"></a>
-Nathan Thomas
-- [Github]()
-- [LinkedIn]()
-Fenton Taylor
+###### Nathan Thomas
+- [Github](https://github.com/nathangthomas)
+- [LinkedIn](https://www.linkedin.com/in/nathangordonthomas/)
+
+###### Fenton Taylor
 - [GitHub](https://github.com/fentontaylor)
 - [LinkedIn](https://www.linkedin.com/in/fenton-taylor-006057122/)
-

@@ -17,17 +17,18 @@ describe("Test GET favorites", () => {
     await database.raw("TRUNCATE TABLE favorites CASCADE");
   });
 
-  it.skip("returns a list of all favorites in the db", async () => {
-    let fave_1 = new Favorite({id: 1, title: 'Thunderstruck', artistName: 'AC/DC', genre: 'Rock', rating: 98})
+  it("returns a list of all favorites in the db", async () => {
+    let fave1 = await database('favorites')
+      .insert({id: 1, title: 'Thunderstruck', artist_name: 'AC/DC', genre: 'Rock', rating: 98})
+      .returning(['id', 'title', 'artist_name', 'genre', 'rating'])
 
-    let fave_2 = new Favorite({id: 2, title: 'Africa', artistName: 'Toto', genre: 'pop', rating: 100})
-
-    await database('favorites').insert(fave_1)
-    await database('favorites').insert(fave_2)
+    let fave2 = await database('favorites')
+      .insert({id: 2, title: 'Africa', artist_name: 'Toto', genre: 'pop', rating: 100})
+      .returning(['id', 'title', 'artist_name', 'genre', 'rating'])
 
     var response = await request(app)
     .get('/api/v1/favorites')
       expect(response.status).toBe(200)
-      expect(Object(response.body)).toMatchObject([fave_1, fave_2])
+      expect(response.body).toMatchObject([fave1[0], fave2[0]])
   });
 });

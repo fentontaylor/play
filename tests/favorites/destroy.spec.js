@@ -16,17 +16,12 @@ describe("Test DELETE favorites", () => {
     await database.raw("TRUNCATE TABLE favorites CASCADE");
   });
 
-  it("deletes a single favorite by id passed in body as json", async () => {
+  it("deletes a single favorite by id", async () => {
 
     await database('favorites').insert({id: 1, title: 'Thunderstruck', artist_name: 'AC/DC', genre: 'Rock', rating: 98})
 
-    var body = {
-      "id": 1
-    };
-
     var response = await request(app)
-    .delete('/api/v1/favorites')
-    .send(body);
+    .delete('/api/v1/favorites/1')
 
     expect(response.status).toBe(204)
   });
@@ -34,13 +29,7 @@ describe("Test DELETE favorites", () => {
   it("returns a 404 if id is not found", async () => {
 
     var response = await request(app)
-    var body = {
-      "id": 1
-    };
-
-    var response = await request(app)
-    .delete('/api/v1/favorites')
-    .send(body);
+    .delete('/api/v1/favorites/1')
 
     expect(response.status).toBe(404)
     expect(response.body.error).toBe('Record not found.')

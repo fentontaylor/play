@@ -62,6 +62,25 @@ router.post('/', (request, response) => {
   })
 });
 
+router.delete('/', (request, response) => {
+  favoriteSongs()
+    .then(favorites => {
+      if (favorites.length){
+      let targetId = request.body.id
+      seekAndDestroy(targetId)
+        .then(targetDestroyed => {
+          response.status(204).send()
+        })
+    } else {
+      response.status(404).json({
+        error: 'Record not found.'
+      })
+    }
+  })
+});
+
+
+
 async function favoriteSongs() {
   try{
     return await database('favorites')
@@ -79,5 +98,14 @@ async function favoriteSong(songId) {
     return e;
   }
 }
+
+async function seekAndDestroy(targetId){
+  try {
+    return await database('favorites').where({id: targetId}).del()
+  }catch(e){
+    return e;
+  }
+}
+
 
 module.exports = router;

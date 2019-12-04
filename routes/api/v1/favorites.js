@@ -2,8 +2,8 @@ require('dotenv').config()
 var express = require('express');
 var router = express.Router();
 const Favorite = require("../../../models/favorite");
-const fetchSongInfo = require("../../../services/musixService");
-const favoritesHelpers = require("../../../helpers/favoritesHelpers");
+const fetchSongInfo = require("../../../utils/musixService");
+const favoritesHelpers = require("../../../utils/favoritesHelpers");
 const favoriteSongs = favoritesHelpers.favoriteSongs;
 const favoriteSong = favoritesHelpers.favoriteSong;
 const seekAndDestroy = favoritesHelpers.seekAndDestroy;

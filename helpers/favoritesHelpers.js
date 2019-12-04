@@ -13,9 +13,20 @@ async function favoriteSongs() {
 
 async function favoriteSong(songId) {
   try {
-    return await database('favorites').where({ id: songId })
+    return await database('favorites')
+      .where({ id: songId })
       .column(['id', 'title', 'artist_name', 'genre', 'rating'])
   } catch (e) {
+    return e;
+  }
+}
+
+async function createFavorite(fav) {
+  try {
+    return await database('favorites')
+      .insert(fav, 'id')
+      .returning(['id', 'title', 'artist_name', 'genre', 'rating'])
+  } catch(e) {
     return e;
   }
 }
@@ -31,5 +42,6 @@ async function seekAndDestroy(targetId) {
 module.exports = {
   favoriteSongs: favoriteSongs,
   favoriteSong: favoriteSong,
+  createFavorite: createFavorite,
   seekAndDestroy: seekAndDestroy
 }

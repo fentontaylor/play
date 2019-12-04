@@ -10,6 +10,7 @@ const favoritesHelpers = require("../../../helpers/favoritesHelpers");
 const favoriteSongs = favoritesHelpers.favoriteSongs;
 const favoriteSong = favoritesHelpers.favoriteSong;
 const seekAndDestroy = favoritesHelpers.seekAndDestroy;
+const createFavorite = favoritesHelpers.createFavorite;
 
 router.get('/', (request, response) => {
   favoriteSongs()
@@ -56,13 +57,19 @@ router.post('/', (request, response) => {
   .then(res => {
     var fav = new Favorite(res);
 
-    database('favorites')
-      .insert(fav, 'id')
-      .returning(['id', 'title', 'artist_name', 'genre', 'rating'])
-      .then(attr => {
-        response.status(201).send(attr[0])
-      })
-      .catch(error => response.status(500).send({ error }))
+    createFavorite(fav)
+    .then(attr => {
+      response.status(201).send(attr[0])
+    })
+    .catch(error => response.status(500).send({ error }))
+
+    // database('favorites')
+    //   .insert(fav, 'id')
+    //   .returning(['id', 'title', 'artist_name', 'genre', 'rating'])
+    //   .then(attr => {
+    //     response.status(201).send(attr[0])
+    //   })
+    //   .catch(error => response.status(500).send({ error }))
   })
 });
 

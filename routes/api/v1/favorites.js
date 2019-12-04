@@ -5,7 +5,7 @@ const environment = process.env.NODE_ENV || 'development';
 const configuration = require('../../../knexfile')[environment];
 const database = require('knex')(configuration);
 const Favorite = require("../../../models/favorite");
-
+const MusixService = require("../../../services/musixService");
 
 router.get('/', (request, response) => {
   favoriteSongs()
@@ -35,8 +35,10 @@ router.get('/:id', (request, response) => {
 
 router.post('/', (request, response) => {
   var body = request.body;
+  const title = body.title;
+  const artist = body.artistName;
 
-  for (let requiredParam of ['title', 'artistName', 'rating']) {
+  for (let requiredParam of ['title', 'artistName']) {
     if (!body[requiredParam]) {
       return response
       .status(400)
@@ -44,21 +46,20 @@ router.post('/', (request, response) => {
     }
   }
 
-  var rating = parseInt(request.body.rating)
+  const service = new MusixService(title, artist);
 
-  if (!(rating >= 1 && rating <= 100)) {
-    return response
-      .status(400)
-      .send({ error: "Rating must be between 1-100" })
-  }
+  service.fetchSongInfo(title, artist)
+  .then(res => {
+    var fav = new Favorite(res);
 
-  var fave = new Favorite(body);
-
-  database('favorites')
-    .insert(fave, 'id')
-    .returning('id')
-    .then(id => response.status(201).send({ id: id[0] }))
-    .catch(error => response.status(500).send({ error }))
+    database('favorites')
+      .insert(fav, 'id')
+      .returning(['id', 'title', 'artist_name', 'genre', 'rating'])
+      .then(attr => {
+        response.status(201).send(attr[0])
+      })
+      .catch(error => response.status(500).send({ error }))
+  })
 });
 
 async function favoriteSongs() {

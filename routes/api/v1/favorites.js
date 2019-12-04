@@ -10,27 +10,27 @@ const MusixService = require("../../../services/musixService");
 router.get('/', (request, response) => {
   favoriteSongs()
     .then(favorites => {
-      if (favorites.length){
-      response.status(200).send(favorites)
-    } else {
-      response.status(404).json({
-        error: 'Not found.'
-      })
-    }
+      if (favorites.length) {
+        response.status(200).send(favorites)
+      } else {
+        response.status(404).json({
+          error: 'Not found.'
+        })
+      }
     })
 });
 
 router.get('/:id', (request, response) => {
   favoriteSong(request.params.id)
     .then(favorite => {
-      if (favorite.length){
-      response.status(200).send(favorite)
-    } else {
-      response.status(404).json({
-        error: 'Record not found.'
-      })
-    }
-  })
+      if (favorite.length) {
+        response.status(200).send(favorite)
+      } else {
+        response.status(404).json({
+          error: 'Record not found.'
+        })
+      }
+    })
 });
 
 router.post('/', (request, response) => {
@@ -65,12 +65,10 @@ router.post('/', (request, response) => {
 router.delete('/', (request, response) => {
   favoriteSongs()
     .then(favorites => {
-      if (favorites.length){
-      let targetId = request.body.id
-      seekAndDestroy(targetId)
-        .then(targetDestroyed => {
-          response.status(204).send()
-        })
+      if (favorites.length) {
+        let targetId = request.body.id
+        seekAndDestroy(targetId)
+        .then(() => response.status(204).send())
       } else {
         response.status(404).json({
           error: 'Record not found.'
@@ -78,8 +76,6 @@ router.delete('/', (request, response) => {
       }
     })
 });
-
-
 
 async function favoriteSongs() {
   try{
@@ -106,6 +102,5 @@ async function seekAndDestroy(targetId){
     return e;
   }
 }
-
 
 module.exports = router;

@@ -1,11 +1,15 @@
 require('dotenv').config()
 var express = require('express');
 var router = express.Router();
-const environment = process.env.NODE_ENV || 'development';
-const configuration = require('../../../knexfile')[environment];
-const database = require('knex')(configuration);
+// const environment = process.env.NODE_ENV || 'development';
+// const configuration = require('../../../knexfile')[environment];
+// const database = require('knex')(configuration);
 const Favorite = require("../../../models/favorite");
 const MusixService = require("../../../services/musixService");
+const favoritesHelpers = require("../../../helpers/favoritesHelpers");
+const favoriteSongs = favoritesHelpers.favoriteSongs;
+const favoriteSong = favoritesHelpers.favoriteSong;
+const seekAndDestroy = favoritesHelpers.seekAndDestroy;
 
 router.get('/', (request, response) => {
   favoriteSongs()
@@ -77,30 +81,30 @@ router.delete('/:id', (request, response) => {
     })
 });
 
-async function favoriteSongs() {
-  try{
-    return await database('favorites')
-    .column(['id', 'title', 'artist_name', 'genre', 'rating'])
-  }catch(e){
-    return e;
-  }
-}
+// async function favoriteSongs() {
+//   try{
+//     return await database('favorites')
+//     .column(['id', 'title', 'artist_name', 'genre', 'rating'])
+//   }catch(e){
+//     return e;
+//   }
+// }
 
-async function favoriteSong(songId) {
-  try{
-    return await database('favorites').where({id: songId})
-    .column(['id', 'title', 'artist_name', 'genre', 'rating'])
-  }catch(e){
-    return e;
-  }
-}
+// async function favoriteSong(songId) {
+//   try{
+//     return await database('favorites').where({id: songId})
+//     .column(['id', 'title', 'artist_name', 'genre', 'rating'])
+//   }catch(e){
+//     return e;
+//   }
+// }
 
-async function seekAndDestroy(targetId){
-  try {
-    return await database('favorites').where({id: targetId}).del()
-  }catch(e){
-    return e;
-  }
-}
+// async function seekAndDestroy(targetId){
+//   try {
+//     return await database('favorites').where({id: targetId}).del()
+//   }catch(e){
+//     return e;
+//   }
+// }
 
 module.exports = router;

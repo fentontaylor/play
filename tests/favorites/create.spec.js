@@ -17,11 +17,8 @@ describe("Test POST to favorites", () => {
 
   it("happy path", async () => {
     const body = {
-      "id": 1,
       "title": "We Will Rock You",
-      "artistName": "Queen",
-      "genre": "Rock",
-      "rating": 88
+      "artistName": "Queen"
     };
 
     const noFavs = await database('favorites').first()
@@ -33,20 +30,22 @@ describe("Test POST to favorites", () => {
 
     expect(res.statusCode).toBe(201);
     expect(res.body).toHaveProperty('id');
+    expect(res.body).toHaveProperty('title');
+    expect(res.body).toHaveProperty('artist_name');
+    expect(res.body).toHaveProperty('genre');
+    expect(res.body).toHaveProperty('rating');
 
     const fav = await database('favorites').first();
-    expect(fav.title).toBe(body.title);
-    expect(fav.artist_name).toBe(body.artistName);
-    expect(fav.genre).toBe(body.genre);
-    expect(fav.rating).toBe(body.rating);
+    expect(fav.title).toBe("We Will Rock You");
+    expect(fav.artist_name).toBe("Queen");
+    expect(fav.genre).toBe("Arena Rock");
+    expect(fav.rating).toBe(79);
   })
 
   it("happy path with default genre", async ()=> {
     const body = {
-      "id": 1,
-      "title": "We Will Rock You",
-      "artistName": "Queen",
-      "rating": 88
+      "title": "Under Pressure",
+      "artistName": "Vanilla Ice vs. Queen Bowie"
     };
 
     const res = await request(app)
@@ -62,10 +61,7 @@ describe("Test POST to favorites", () => {
   it("sad path: missing required attribute", async ()=> {
     // Missing <title>
     var body = {
-      "id": 1,
       "artistName": "Queen",
-      "genre": "Rock",
-      "rating": 88
     };
 
     var res = await request(app)
@@ -77,10 +73,7 @@ describe("Test POST to favorites", () => {
 
     // Missing <artistName>
     var body = {
-      "id": 1,
-      "title": "We Will Rock You",
-      "genre": "Rock",
-      "rating": 88
+      "title": "We Will Rock You"
     };
 
     var res = await request(app)
@@ -89,70 +82,5 @@ describe("Test POST to favorites", () => {
 
     expect(res.statusCode).toBe(400)
     expect(res.body).toMatchObject({ error: 'Missing required attribute <artistName>' })
-
-    // Missing <rating>
-    var body = {
-      "id": 1,
-      "title": "We Will Rock You",
-      "artistName": "Queen",
-      "genre": "Rock",
-    };
-
-    var res = await request(app)
-      .post("/api/v1/favorites")
-      .send(body);
-
-    expect(res.statusCode).toBe(400)
-    expect(res.body).toMatchObject({ error: 'Missing required attribute <rating>' })
-  })
-
-  it("sad path: rating not in range 1-100", async ()=> {
-    // rating < 1
-    var body = {
-      "id": 1,
-      "title": "We Will Rock You",
-      "artistName": "Queen",
-      "genre": "Rock",
-      "rating": -5
-    };
-
-    var res = await request(app)
-      .post("/api/v1/favorites")
-      .send(body);
-
-    expect(res.statusCode).toBe(400)
-    expect(res.body).toMatchObject({ error: "Rating must be between 1-100" })
-
-    // rating > 100
-    var body = {
-      "id": 1,
-      "title": "We Will Rock You",
-      "artistName": "Queen",
-      "genre": "Rock",
-      "rating": 230
-    };
-
-    var res = await request(app)
-      .post("/api/v1/favorites")
-      .send(body);
-
-    expect(res.statusCode).toBe(400)
-    expect(res.body).toMatchObject({ error: "Rating must be between 1-100" })
-
-    // rating is NaN
-    var body = {
-      "id": 1,
-      "title": "We Will Rock You",
-      "artistName": "Queen",
-      "genre": "Rock",
-      "rating": 'askjdf'
-    };
-
-    var res = await request(app)
-      .post("/api/v1/favorites")
-      .send(body);
-
-    expect(res.statusCode).toBe(400)
-    expect(res.body).toMatchObject({ error: "Rating must be between 1-100" })
   })
 })

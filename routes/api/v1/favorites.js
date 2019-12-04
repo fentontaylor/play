@@ -10,8 +10,27 @@ const MusixService = require("../../../services/musixService");
 router.get('/', (request, response) => {
   favoriteSongs()
     .then(favorites => {
+      if (favorites.length){
       response.status(200).send(favorites)
+    } else {
+      response.status(404).json({
+        error: 'Not found.'
+      })
+    }
     })
+});
+
+router.get('/:id', (request, response) => {
+  favoriteSong(request.params.id)
+    .then(favorite => {
+      if (favorite.length){
+      response.status(200).send(favorite)
+    } else {
+      response.status(404).json({
+        error: 'Record not found.'
+      })
+    }
+  })
 });
 
 router.post('/', (request, response) => {
@@ -46,6 +65,16 @@ router.post('/', (request, response) => {
 async function favoriteSongs() {
   try{
     return await database('favorites')
+    .column(['id', 'title', 'artist_name', 'genre', 'rating'])
+  }catch(e){
+    return e;
+  }
+}
+
+async function favoriteSong(songId) {
+  try{
+    return await database('favorites').where({id: songId})
+    .column(['id', 'title', 'artist_name', 'genre', 'rating'])
   }catch(e){
     return e;
   }

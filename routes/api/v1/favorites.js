@@ -62,11 +62,11 @@ router.post('/', (request, response) => {
   })
 });
 
-router.delete('/', (request, response) => {
-  favoriteSongs()
-    .then(favorites => {
-      if (favorites.length) {
-        let targetId = request.body.id
+router.delete('/:id', (request, response) => {
+  favoriteSong(request.params.id)
+    .then(favorite => {
+      if (favorite.length) {
+        let targetId = request.params.id
         seekAndDestroy(targetId)
         .then(() => response.status(204).send())
       } else {

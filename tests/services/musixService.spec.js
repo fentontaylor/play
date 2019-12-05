@@ -9,7 +9,6 @@ describe("MusixService", () => {
     })
     
     let res = await fetchSongInfo("We Will Rock You", "Queen");
-    console.log(res);
     let track = res.message.body.track;
     
     expect(res).toHaveProperty("message");

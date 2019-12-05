@@ -1,4 +1,3 @@
-const fetch = require('node-fetch');
 const queenSong = require('../../tests/fixtures/queenSong');
 const queenSongNoGenres = require('../../tests/fixtures/queenSongNoGenres');
 

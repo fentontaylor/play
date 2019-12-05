@@ -1,8 +1,13 @@
 var app = require('../../app');
 const fetchSongInfo = require('../../utils/musixService');
+const songJson = require('../../tests/fixtures/queenSong');
 
-describe("MusixService", ()=> {
-  it("can fetch song details from musixmatch API", async ()=> {
+describe("MusixService", () => {
+  it("can fetch song details from musixmatch API", async () => {
+    fetch = jest.fn().mockImplementation(() => {
+      return Promise.resolve(songJson);
+    })
+
     let res = await fetchSongInfo("We Will Rock You", "Queen");
     let track = res.message.body.track;
     

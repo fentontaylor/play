@@ -7,7 +7,6 @@ fetchSongInfo = async function (title, artist) {
   } else {
     return Promise.resolve(queenSongNoGenres);
   }
-  
 }
 
 module.exports = fetchSongInfo;

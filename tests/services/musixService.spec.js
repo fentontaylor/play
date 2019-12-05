@@ -1,17 +1,14 @@
 var app = require('../../app');
-const MusixService = require('../../services/musixService');
+const fetchSongInfo = require('../../utils/musixService');
+const songJson = require('../../tests/fixtures/queenSong');
 
-describe("MusixService", ()=> {
-  it("can initialize", ()=> {
-    let service = new MusixService("We Will Rock You", "Queen");
+describe("MusixService", () => {
+  it("can fetch song details from musixmatch API", async () => {
+    fetch = jest.fn().mockImplementation(() => {
+      return Promise.resolve(songJson);
+    })
 
-    expect(service).toBeInstanceOf(MusixService);
-  })
-
-  it("can fetch song details from musixmatch API", async ()=> {
-    let service = await new MusixService("We Will Rock You", "Queen");
-    let res = await service.fetchSongInfo();
-    
+    let res = await fetchSongInfo("We Will Rock You", "Queen");
     let track = res.message.body.track;
     
     expect(res).toHaveProperty("message");

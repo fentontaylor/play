@@ -2,8 +2,8 @@ require('dotenv').config()
 var express = require('express');
 var router = express.Router();
 const Favorite = require("../../../models/favorite");
-const MusixService = require("../../../services/musixService");
-const favoritesHelpers = require("../../../helpers/favoritesHelpers");
+const fetchSongInfo = require("../../../utils/musixService");
+const favoritesHelpers = require("../../../utils/favoritesHelpers");
 const favoriteSongs = favoritesHelpers.favoriteSongs;
 const favoriteSong = favoritesHelpers.favoriteSong;
 const seekAndDestroy = favoritesHelpers.seekAndDestroy;
@@ -50,9 +50,7 @@ router.post('/', (request, response) => {
     }
   }
 
-  const service = new MusixService(title, artist);
-
-  service.fetchSongInfo(title, artist)
+  fetchSongInfo(title, artist)
   .then(res => {
     var fav = new Favorite(res);
 

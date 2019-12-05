@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 
-fetchSongInfo = async function(title, artist) {
+const fetchSongInfo = async function(title, artist) {
   try {
     let key = process.env.MUSIXMATCH_KEY;
     let url = `https://api.musixmatch.com/ws/1.1/matcher.track.get` +

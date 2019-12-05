@@ -6,6 +6,8 @@ const environment = process.env.NODE_ENV || 'test';
 const configuration = require('../../knexfile')[environment];
 const database = require('knex')(configuration);
 
+jest.mock('../../utils/musixService');
+
 describe("Test POST to favorites", () => {
   beforeEach(async () => {
     await database.raw("TRUNCATE TABLE favorites CASCADE");
@@ -39,10 +41,10 @@ describe("Test POST to favorites", () => {
     expect(fav.title).toBe("We Will Rock You");
     expect(fav.artist_name).toBe("Queen");
     expect(fav.genre).toBe("Arena Rock");
-    // expect(fav.rating).toBe(79);  Put this line back in after mocking the API call
+    expect(fav.rating).toBe(78);
   })
 
-  it("happy path with default genre", async ()=> {
+  it("happy path with default genre", async () => {
     const body = {
       "title": "Under Pressure",
       "artistName": "Vanilla Ice vs. Queen Bowie"
@@ -58,7 +60,7 @@ describe("Test POST to favorites", () => {
     expect(fav.genre).toBe("Unknown");
   })
 
-  it("sad path: missing required attribute", async ()=> {
+  it("sad path: missing required attribute", async () => {
     // Missing <title>
     var body = {
       "artistName": "Queen",

@@ -1,8 +1,14 @@
 const fetch = require('node-fetch');
-const queenSong = require('../../tests/fixtures/queenSong')
+const queenSong = require('../../tests/fixtures/queenSong');
+const queenSongNoGenres = require('../../tests/fixtures/queenSongNoGenres');
 
 fetchSongInfo = async function (title, artist) {
-  return Promise.resolve(queenSong);
+  if (title == "We Will Rock You") {
+    return Promise.resolve(queenSong);
+  } else {
+    return Promise.resolve(queenSongNoGenres);
+  }
+  
 }
 
 module.exports = fetchSongInfo;

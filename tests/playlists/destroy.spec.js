@@ -23,7 +23,7 @@ describe("DELETE /api/v1/favorites/:id", () => {
       expect(result.length).toBe(1);
     })
 
-    const res = request(app).delete('/api/v1/playlists/1')
+    const res = await request(app).delete('/api/v1/playlists/1')
 
     expect(res.status).toBe(204);
 
@@ -31,5 +31,12 @@ describe("DELETE /api/v1/favorites/:id", () => {
     .then(result => {
       expect(result.length).toBe(0);
     })
+  })
+
+  it('returns status 404 if record not found', async () => {
+    const res = await request(app).delete('/api/v1/playlists/8')
+
+    expect(res.status).toBe(404);
+    expect(res.body).toEqual({ error: 'Record not found' });
   })
 })

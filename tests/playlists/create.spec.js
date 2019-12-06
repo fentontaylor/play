@@ -21,8 +21,8 @@ describe("Test POST to playlists", () => {
       "title": "Twistin' Grips"
     };
 
-    const noFavs = await database('playlists').first()
-    expect(noFavs).toBeUndefined();
+    const playlist = await database('playlists').first()
+    expect(playlist).toBeUndefined();
 
     const res = await request(app)
       .post("/api/v1/playlists")
@@ -32,7 +32,23 @@ describe("Test POST to playlists", () => {
     expect(res.body).toHaveProperty('id')
     expect(res.body).toHaveProperty('title');
 
-    const pl = await database('playlists').first();
-    expect(pl.title).toBe("Twistin' Grips");
+    const pList = await database('playlists').first();
+    expect(pList.title).toBe("Twistin' Grips");
+  })
+
+  it("it returns a 400 error", async () => {
+    const body = {
+
+    };
+
+    const playlist = await database('playlists').first()
+    expect(playlist).toBeUndefined();
+
+    const res = await request(app)
+      .post("/api/v1/playlists")
+      .send(body);
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body.error).toBe('Missing required attribute <title>')
   })
 })

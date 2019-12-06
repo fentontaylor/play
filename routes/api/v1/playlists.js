@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const helpers = require('../../../utils/playlistsHelpers');
 const findPlaylist = helpers.findPlaylist;
+const createPlaylist = helpers.createPlaylist;
 const deletePlaylist = helpers.deletePlaylist;
 
 router.delete('/:id', (request, response) => {
@@ -19,5 +20,20 @@ router.delete('/:id', (request, response) => {
   })
   .catch(error => response.status(500).send({ error }));
 })
+
+router.post('/', (request, response) => {
+  var body = request.body;
+  var title = body.title;
+
+  if (!title){
+    return response.status(400).send({ error: `Missing required attribute <title>` });
+  }
+
+  createPlaylist(title)
+  .then(data => {
+    response.status(201).send(data[0])
+  })
+  .catch(error => response.status(500).send({error}))
+});
 
 module.exports = router;

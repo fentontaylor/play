@@ -11,6 +11,15 @@ const findPlaylist = async function(id) {
   }
 }
 
+async function allPlaylists() {
+  try {
+    return await database('playlists')
+      .column(['id', 'title', 'created_at', 'updated_at'])
+  } catch (e) {
+    return e;
+  }
+}
+
 async function createPlaylist(title) {
   try {
     return await database('playlists')
@@ -32,5 +41,6 @@ const deletePlaylist = async function(id) {
 module.exports = {
   findPlaylist: findPlaylist,
   createPlaylist: createPlaylist,
-  deletePlaylist: deletePlaylist
+  deletePlaylist: deletePlaylist,
+  allPlaylists: allPlaylists
 }

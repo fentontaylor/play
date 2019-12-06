@@ -56,7 +56,7 @@ router.post('/', (request, response) => {
 router.put('/:id', (request, response) => {
   let id = request.params.id;
   let title = request.body.title;
-  console.log(title)
+
   if (!title) {
     return response.status(400)
       .send({ error: 'Missing required attribute <title>' })

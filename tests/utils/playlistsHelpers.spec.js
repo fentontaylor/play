@@ -33,10 +33,11 @@ describe('playlistsHelpers functions', () => {
   })
 
   describe('deletePlaylist', () => {
-    it('deletes a playlist with a given id', async () => {
+    it.only('deletes a playlist with a given id', async () => {
       database('playlists').select()
       .then(playlists => {
         // Playlist exists and will be deleted
+        console.log(playlists)
         expect(playlists.length).toBe(2);
         expect(playlists[0].id).toBe(1);
         expect(playlists[0].title).toBe('Looney Tunes');
@@ -56,14 +57,13 @@ describe('playlistsHelpers functions', () => {
 
   describe('updatePlaylist', () => {
     it('updates a playlist title', async () => {
-      updatePlaylist(1, 'Fancy New Title')
-      .then(result => {
-        expect(result).toHaveProperty('id');
-        expect(result).toHaveProperty('title');
-        expect(result).toHaveProperty('createdAt');
-        expect(result).toHaveProperty('updatedAt');
-        expect(result.title).toBe('Fancy New Title');
-      })
+      const result = await updatePlaylist(1, 'Fancy New Title')
+
+      expect(result).toHaveProperty('id');
+      expect(result).toHaveProperty('title');
+      expect(result).toHaveProperty('created_at');
+      expect(result).toHaveProperty('updated_at');
+      expect(result.title).toBe('Fancy New Title');
     })
   })
 })

@@ -7,7 +7,7 @@ describe("MusixService", () => {
     fetch = jest.fn().mockImplementation(() => {
       return Promise.resolve(songJson);
     })
-
+    
     let res = await fetchSongInfo("We Will Rock You", "Queen");
     let track = res.message.body.track;
     

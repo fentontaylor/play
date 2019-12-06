@@ -51,14 +51,19 @@ npm test
 ```
 https://looney-tunes.herokuapp.com
 ```
-#### Endpoints:
+### Endpoints:
+#### Favorites
 - [POST /api/v1/favorites](#post_favorites)
 - [GET /api/v1/favorites](#get_favorites)
 - [GET /api/v1/favorites/:id](#get_favorite)
-- [DELETE /api/v1/favorites/:id](#delete_favorite)
+- [DELETE /api/v1/favorites/:id](#delete_favorites)
+#### Playlists
+- [POST /api/v1/playlists](#post_playlists)
+- [GET /api/v1/playlists](#get_playlists)
+- [PUT /api/v1/playlists/:id](#put_playlists)
+- [DELETE /api/v1/playlists/:id](#delete_playlists)
 
-
-### Add Favorites Request
+### Add Favorites Request <a name="post_favorites"></a>
 
 ```
 POST /api/v1/favorites
@@ -102,7 +107,7 @@ Status: 400
   "error": "Rating must be an integer between 1-100"
 }
 ```
-### Get Favorites Request
+### Get Favorites Request <a name="get_favorites"></a>
 
 ```
 GET /api/v1/favorites
@@ -149,7 +154,7 @@ Status: 404
 }
 ```
 
-### Get Favorite Request
+### Get Favorite Request <a name="get_favorite"></a>
 
 ```
 GET /api/v1/favorites/:id
@@ -183,7 +188,7 @@ Status: 404
 }
 ```
 
-### Delete Favorite Request
+### Delete Favorite Request <a name="delete_favorites"></a>
 
 ```
 DELETE /api/v1/favorites/3
@@ -207,7 +212,7 @@ Status: 404
 }
 ```
 
-### Get Playlists Request
+### Get Playlists Request <a name="get_playlists"></a>
 
 ```
 GET /api/v1/playlists

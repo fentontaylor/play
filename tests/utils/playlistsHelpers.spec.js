@@ -4,6 +4,7 @@ const database = require('knex')(configuration);
 const helpers = require('../../utils/playlistsHelpers');
 const findPlaylist = helpers.findPlaylist;
 const deletePlaylist = helpers.deletePlaylist;
+const updatePlaylist = helpers.updatePlaylist;
 
 describe('playlistsHelpers functions', () => {
   beforeEach(async () => {
@@ -49,6 +50,19 @@ describe('playlistsHelpers functions', () => {
         expect(playlists).toEqual(
           expect.not.arrayContaining(playlist1)
         )
+      })
+    })
+  })
+
+  describe('updatePlaylist', () => {
+    it('updates a playlist title', async () => {
+      updatePlaylist(1, 'Fancy New Title')
+      .then(result => {
+        expect(result).toHaveProperty('id');
+        expect(result).toHaveProperty('title');
+        expect(result).toHaveProperty('createdAt');
+        expect(result).toHaveProperty('updatedAt');
+        expect(result.title).toBe('Fancy New Title');
       })
     })
   })

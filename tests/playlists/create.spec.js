@@ -6,6 +6,7 @@ const environment = process.env.NODE_ENV || 'test';
 const configuration = require('../../knexfile')[environment];
 const database = require('knex')(configuration);
 
+
 describe("Test POST to playlists", () => {
   beforeEach(async () => {
     await database.raw("TRUNCATE TABLE playlists CASCADE");
@@ -15,7 +16,7 @@ describe("Test POST to playlists", () => {
     await database.raw("TRUNCATE TABLE playlists CASCADE");
   });
 
-  it("happy path", async () => {
+  it("it can create a playlist", async () => {
     const body = {
       "title": "Twistin' Grips"
     };
@@ -28,6 +29,10 @@ describe("Test POST to playlists", () => {
       .send(body);
 
     expect(res.statusCode).toBe(201);
-  
+    expect(res.body).toHaveProperty('id')
+    expect(res.body).toHaveProperty('title');
+
+    const pl = await database('playlists').first();
+    expect(pl.title).toBe("Twistin' Grips");
   })
 })

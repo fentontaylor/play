@@ -51,14 +51,19 @@ npm test
 ```
 https://looney-tunes.herokuapp.com
 ```
-#### Endpoints:
+### Endpoints:
+#### Favorites
 - [POST /api/v1/favorites](#post_favorites)
 - [GET /api/v1/favorites](#get_favorites)
 - [GET /api/v1/favorites/:id](#get_favorite)
-- [DELETE /api/v1/favorites/:id](#delete_favorite)
+- [DELETE /api/v1/favorites/:id](#delete_favorites)
+#### Playlists
+- [POST /api/v1/playlists](#post_playlists)
+- [GET /api/v1/playlists](#get_playlists)
+- [PUT /api/v1/playlists/:id](#put_playlists)
+- [DELETE /api/v1/playlists/:id](#delete_playlists)
 
-
-### Add Favorites Request
+### Add Favorites Request <a name="post_favorites"></a>
 
 ```
 POST /api/v1/favorites
@@ -102,7 +107,7 @@ Status: 400
   "error": "Rating must be an integer between 1-100"
 }
 ```
-### Get Favorites Request
+### Get Favorites Request <a name="get_favorites"></a>
 
 ```
 GET /api/v1/favorites
@@ -149,7 +154,7 @@ Status: 404
 }
 ```
 
-### Get Favorite Request
+### Get Favorite Request <a name="get_favorite"></a>
 
 ```
 GET /api/v1/favorites/:id
@@ -183,7 +188,7 @@ Status: 404
 }
 ```
 
-### Delete Favorite Request
+### Delete Favorite Request <a name="delete_favorites"></a>
 
 ```
 DELETE /api/v1/favorites/3
@@ -204,6 +209,50 @@ Status: 404
 
 {
   "error": "Record not found."
+}
+```
+
+### Get Playlists Request <a name="get_playlists"></a>
+
+```
+GET /api/v1/playlists
+```
+
+#### Example
+```
+GET https://looney-tunes.herokuapp.com/api/v1/playlists
+
+```
+**Success Response**
+```
+[
+    {
+        "id": 1,
+        "title": "Focus On the Task",
+        "created_at": "2019-12-06T06:20:18.476Z",
+        "updated_at": "2019-12-06T06:20:18.476Z"
+    },
+    {
+        "id": 2,
+        "title": "Wake Up Music",
+        "created_at": "2019-12-06T06:44:30.928Z",
+        "updated_at": "2019-12-06T06:44:30.928Z"
+    },
+    {
+        "id": 3,
+        "title": "Solo In Mexico",
+        "created_at": "2019-12-06T06:45:39.691Z",
+        "updated_at": "2019-12-06T06:45:39.691Z"
+    }
+]
+```
+**Error Responses**
+If there are no playlists in the database, a response like the following will be sent:
+```
+Status: 404
+
+{
+  "error": "Not found."
 }
 ```
 

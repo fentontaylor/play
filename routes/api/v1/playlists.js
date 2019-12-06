@@ -55,12 +55,18 @@ router.post('/', (request, response) => {
 router.put('/:id', (request, response) => {
   let id = request.params.id;
   let title = request.body.title;
-
-  updatePlaylist(id, title)
-  .then(result => {
-    response.status(200).send(result);
+  findPlaylist(id)
+  .then(playlist => {
+    if (playlist) {
+      updatePlaylist(id, title)
+      .then(result => {
+        response.status(200).send(result);
+      })
+      .catch(error => response.status(500).send({ error })) 
+    } else {
+      response.status(404).send({ error: 'Record not found' })
+    }
   })
-  .catch(error => response.status(500).send({error}))
 })
 
 module.exports = router;

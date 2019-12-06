@@ -6,7 +6,7 @@ const environment = process.env.NODE_ENV || 'test';
 const configuration = require('../../knexfile')[environment];
 const database = require('knex')(configuration);
 
-describe("DELETE /api/v1/favorites/:id", () => {
+describe("DELETE /api/v1/playlists/:id", () => {
   beforeEach(async () => {
     await database.raw("TRUNCATE TABLE playlists CASCADE");
   });

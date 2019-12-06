@@ -30,4 +30,13 @@ describe('PUT /api/v1/playlists/:id', () => {
 
     expect(playlist[0].title).toBe('Lofi Beatz')
   })
+
+  it('returns 404 if playlist not found by id', async () => {
+    const res = await request(app)
+      .put('/api/v1/playlists/1')
+      .send({ title: 'Lofi Beatz' });
+    
+    expect(res.status).toBe(404);
+    expect(res.body).toEqual({ error: 'Record not found' });
+  })
 })

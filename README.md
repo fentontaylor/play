@@ -207,6 +207,50 @@ Status: 404
 }
 ```
 
+### Get Playlists Request
+
+```
+GET /api/v1/playlists
+```
+
+#### Example
+```
+GET https://looney-tunes.herokuapp.com/api/v1/playlists
+
+```
+**Success Response**
+```
+[
+    {
+        "id": 1,
+        "title": "Focus On the Task",
+        "created_at": "2019-12-06T06:20:18.476Z",
+        "updated_at": "2019-12-06T06:20:18.476Z"
+    },
+    {
+        "id": 2,
+        "title": "Wake Up Music",
+        "created_at": "2019-12-06T06:44:30.928Z",
+        "updated_at": "2019-12-06T06:44:30.928Z"
+    },
+    {
+        "id": 3,
+        "title": "Solo In Mexico",
+        "created_at": "2019-12-06T06:45:39.691Z",
+        "updated_at": "2019-12-06T06:45:39.691Z"
+    }
+]
+```
+**Error Responses**
+If there are no playlists in the database, a response like the following will be sent:
+```
+Status: 404
+
+{
+  "error": "Not found."
+}
+```
+
 ## Schema Design <a name="schema"></a>
 
 

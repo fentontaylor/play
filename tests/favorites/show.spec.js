@@ -5,7 +5,6 @@ var app = require('../../app');
 const environment = process.env.NODE_ENV || 'test';
 const configuration = require('../../knexfile')[environment];
 const database = require('knex')(configuration);
-const Favorite = require("../../models/favorite");
 
 describe("Test GET favorites/:id", () => {
   beforeEach(async () => {

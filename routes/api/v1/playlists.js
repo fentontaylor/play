@@ -1,9 +1,25 @@
 var express = require('express');
 var router = express.Router();
+const helpers = require('../../../utils/playlistsHelpers');
+const findPlaylist = helpers.findPlaylist;
+const createPlaylist = helpers.createPlaylist;
+const deletePlaylist = helpers.deletePlaylist;
 
-const environment = process.env.NODE_ENV || 'test';
-const configuration = require('../../../knexfile')[environment];
-const database = require('knex')(configuration);
+router.delete('/:id', (request, response) => {
+  let id = request.params.id;
+
+  findPlaylist(id)
+  .then(result => {
+    if (result) {
+      deletePlaylist(request.params.id)
+      .then(() => response.status(204).send())
+      .catch(error => response.status(500).send({ error }));
+    } else {
+      response.status(404).send({ error: 'Record not found' })
+    }
+  })
+  .catch(error => response.status(500).send({ error }));
+})
 
 router.post('/', (request, response) => {
   var body = request.body;
@@ -19,15 +35,5 @@ router.post('/', (request, response) => {
   })
   .catch(error => response.status(500).send({error}))
 });
-
-async function createPlaylist(title) {
-  try {
-    return await database('playlists')
-      .insert({title: title}, 'id')
-      .returning('*')
-  } catch(e) {
-    return e;
-  }
-}
 
 module.exports = router;

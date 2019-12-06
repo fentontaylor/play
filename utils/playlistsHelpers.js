@@ -33,10 +33,11 @@ async function createPlaylist(title) {
 
 async function updatePlaylist(id, title) {
   try {
-    return await database('playlists')
+    let playlist = await database('playlists')
       .where({ id: id })
       .update({ title: title })
       .returning('*');
+    return playlist[0];
   } catch(e) {
     return e;
   }

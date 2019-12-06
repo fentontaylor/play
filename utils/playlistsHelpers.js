@@ -30,6 +30,17 @@ async function createPlaylist(title) {
   }
 }
 
+async function updatePlaylist(id, title) {
+  try {
+    return await database('playlists')
+      .where({ id: id })
+      .update({ title: title })
+      .returning('*');
+  } catch(e) {
+    return e;
+  }
+}
+
 const deletePlaylist = async function(id) {
   try {
     return await database('playlists').where({id: id}).del();
@@ -41,6 +52,7 @@ const deletePlaylist = async function(id) {
 module.exports = {
   findPlaylist: findPlaylist,
   createPlaylist: createPlaylist,
+  updatePlaylist: updatePlaylist,
   deletePlaylist: deletePlaylist,
   allPlaylists: allPlaylists
 }

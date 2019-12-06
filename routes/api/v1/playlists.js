@@ -42,7 +42,8 @@ router.post('/', (request, response) => {
   var title = body.title;
 
   if (!title) {
-    return response.status(400).send({ error: `Missing required attribute <title>` });
+    return response.status(400)
+      .send({ error: `Missing required attribute <title>` });
   }
 
   createPlaylist(title)
@@ -55,6 +56,12 @@ router.post('/', (request, response) => {
 router.put('/:id', (request, response) => {
   let id = request.params.id;
   let title = request.body.title;
+  console.log(title)
+  if (!title) {
+    return response.status(400)
+      .send({ error: 'Missing required attribute <title>' })
+  }
+
   findPlaylist(id)
   .then(playlist => {
     if (playlist) {

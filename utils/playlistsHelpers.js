@@ -11,6 +11,15 @@ const findPlaylist = async function(id) {
   }
 }
 
+const deletePlaylist = async function(id) {
+  try {
+    return await database('playlists').where({id: id}).del();
+  } catch(e) {
+    return e;
+  }
+}
+
 module.exports = {
-  findPlaylist: findPlaylist
+  findPlaylist: findPlaylist,
+  deletePlaylist: deletePlaylist
 }

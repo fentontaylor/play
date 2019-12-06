@@ -1,4 +1,4 @@
-const environment = process.env.NODE_ENV || 'test';
+const environment = process.env.NODE_ENV || 'development';
 const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
 
@@ -7,6 +7,16 @@ const findPlaylist = async function(id) {
     let playlist = await database('playlists').where({ id: id })
     return playlist[0];
   } catch(e) {
+    return e;
+  }
+}
+
+async function createPlaylist(title) {
+  try {
+    return await database('playlists')
+      .insert({ title: title }, 'id')
+      .returning('*')
+  } catch (e) {
     return e;
   }
 }
@@ -21,5 +31,6 @@ const deletePlaylist = async function(id) {
 
 module.exports = {
   findPlaylist: findPlaylist,
+  createPlaylist: createPlaylist,
   deletePlaylist: deletePlaylist
 }

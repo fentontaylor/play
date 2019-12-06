@@ -33,11 +33,10 @@ describe('playlistsHelpers functions', () => {
   })
 
   describe('deletePlaylist', () => {
-    it.only('deletes a playlist with a given id', async () => {
+    it('deletes a playlist with a given id', async () => {
       database('playlists').select()
       .then(playlists => {
         // Playlist exists and will be deleted
-        console.log(playlists)
         expect(playlists.length).toBe(2);
         expect(playlists[0].id).toBe(1);
         expect(playlists[0].title).toBe('Looney Tunes');

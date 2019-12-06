@@ -24,10 +24,10 @@ describe('PUT /api/v1/playlists/:id', () => {
 
     expect(res.status).toBe(200);
     
-    const playlist = database('playlists')
+    const playlist = await database('playlists')
       .where({ id: 1 })
-      .columns('*')
+      .columns('*');
 
-    expect(playlist.title).toBe('Lofi Beatz')
+    expect(playlist[0].title).toBe('Lofi Beatz')
   })
 })

@@ -4,6 +4,21 @@ const helpers = require('../../../utils/playlistsHelpers');
 const findPlaylist = helpers.findPlaylist;
 const createPlaylist = helpers.createPlaylist;
 const deletePlaylist = helpers.deletePlaylist;
+const allPlaylists = helpers.allPlaylists;
+
+router.get('/', (request, response) => {
+  allPlaylists()
+  .then(playlists => {
+    if (playlists.length) {
+      response.status(200).send(playlists)
+    } else {
+      response.status(404).json({
+        error: 'Not found.'
+      })
+    }
+  })
+  .catch(error => response.status(500).send({ error }))
+});
 
 router.delete('/:id', (request, response) => {
   let id = request.params.id;

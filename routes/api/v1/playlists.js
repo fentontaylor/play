@@ -5,6 +5,7 @@ const findPlaylist = helpers.findPlaylist;
 const createPlaylist = helpers.createPlaylist;
 const deletePlaylist = helpers.deletePlaylist;
 const allPlaylists = helpers.allPlaylists;
+const updatePlaylist = helpers.updatePlaylist;
 
 router.get('/', (request, response) => {
   allPlaylists()
@@ -40,8 +41,9 @@ router.post('/', (request, response) => {
   var body = request.body;
   var title = body.title;
 
-  if (!title){
-    return response.status(400).send({ error: `Missing required attribute <title>` });
+  if (!title) {
+    return response.status(400)
+      .send({ error: `Missing required attribute <title>` });
   }
 
   createPlaylist(title)
@@ -50,5 +52,28 @@ router.post('/', (request, response) => {
   })
   .catch(error => response.status(500).send({error}))
 });
+
+router.put('/:id', (request, response) => {
+  let id = request.params.id;
+  let title = request.body.title;
+
+  if (!title) {
+    return response.status(400)
+      .send({ error: 'Missing required attribute <title>' })
+  }
+
+  findPlaylist(id)
+  .then(playlist => {
+    if (playlist) {
+      updatePlaylist(id, title)
+      .then(result => {
+        response.status(200).send(result);
+      })
+      .catch(error => response.status(500).send({ error })) 
+    } else {
+      response.status(404).send({ error: 'Record not found' })
+    }
+  })
+})
 
 module.exports = router;

@@ -1,4 +1,4 @@
-# Sweater Weather Express
+# Play
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -47,7 +47,7 @@ npm test
 ## API Documentation <a name="api_docs"></a>
 
 ### All Requests
-#### Base url:
+#### Base url for all requests:
 ```
 https://looney-tunes.herokuapp.com
 ```
@@ -68,21 +68,22 @@ https://looney-tunes.herokuapp.com
 ```
 POST /api/v1/favorites
 ```
-POST request must have a JSON body with the required attributes `title`, `artistName`, and `rating`. `genre` attribute is optional, and if not provided, will default to 'Unknown'. The `rating` must be an integer between 1-100.
+POST request must have a JSON body with the required attributes `title`, `artistName`. `rating` and `genre` attributes are fetched from [musixmatch API](https://developer.musixmatch.com/). If `genre` is missing, it will default to unknown.
 
 #### Example
+
 ```
 POST https://looney-tunes.herokuapp.com/api/v1/favorites
 
 body:
 {
   "title": "We Will Rock You",
-  "artistName": "Queen",
-  "genre": "Rock",
-  "rating": 88
+  "artistName": "Queen"
 }
 ```
-**Success Response**
+
+#### Success Response
+
 ```
 Status: 201
 
@@ -90,8 +91,10 @@ Status: 201
   "id": 5
 }
 ```
-**Error Responses**
+
+#### Error Responses
 If the JSON body is missing any of the required attributes, a response like the following will be sent:
+
 ```
 Status: 400
 
@@ -99,14 +102,7 @@ Status: 400
   "error": "Missing required attribute <attribute name>"
 }
 ```
-If the rating is not an integer between 1-100, a response like the following will be sent:
-```
-Status: 400
 
-{
-  "error": "Rating must be an integer between 1-100"
-}
-```
 ### Get Favorites Request <a name="get_favorites"></a>
 
 ```
@@ -116,7 +112,6 @@ GET /api/v1/favorites
 #### Example
 ```
 GET https://looney-tunes.herokuapp.com/api/v1/favorites
-
 ```
 **Success Response**
 ```
@@ -146,6 +141,7 @@ GET https://looney-tunes.herokuapp.com/api/v1/favorites
 ```
 **Error Responses**
 If there are no favorites in the database, a response like the following will be sent:
+
 ```
 Status: 404
 
@@ -211,6 +207,7 @@ Status: 404
   "error": "Record not found."
 }
 ```
+## Playlist Endpoints
 
 ### Get Playlists Request <a name="get_playlists"></a>
 
@@ -246,13 +243,97 @@ GET https://looney-tunes.herokuapp.com/api/v1/playlists
     }
 ]
 ```
-**Error Responses**
+
+### PUT playlists request <a name="put_playlists"></a>
+
+```
+PUT `/api/v1/playlists/:id`
+```
+
+Request must have a JSON body with an attribute of `title`. Response will be status 400 if missing.
+
+#### Example
+
+```
+PUT https://looney-tunes.herokuapp.com/api/v1/playlists/2
+
+{
+  "title": "Looney Mix"
+}
+
+```
+
+#### Success response
+Returns the updated playlist object with the specific :id you've passed in.
+
+```
+Status: 200
+
+{
+  "id": 2,
+  "title": "Looney Mix",
+  "createdAt": 2019-11-26T16:03:43+00:00,
+  "updatedAt": 2019-11-26T16:03:43+00:00
+}
+```
+
+#### Error Responses
 If there are no playlists in the database, a response like the following will be sent:
+
 ```
 Status: 404
 
 {
   "error": "Not found."
+}
+```
+
+#### Error response 
+Returns a 404 if the playlist is not found.
+
+```
+Status: 404
+
+{ 
+  "error": "Record not found"
+}
+```
+
+Returns 400 if title is not present in JSON body
+
+```
+Status: 400
+
+{
+  "error": "Missing required attribute <title>"
+}
+```
+
+### Delete Playlist Request <a name="delete_playlist"></a>
+
+```
+DELETE /api/v1/playlists/:id
+```
+
+Deletes a playlist with the given id in the request paramaters. If successful, response status is 204. If the record is not found, response status is 404.
+
+#### Example
+
+```
+DELETE https://looney-tunes.herokuapp.com/api/v1/playlists/2
+```
+
+#### Success Response
+
+```
+Status: 204
+```
+
+#### Error Response
+```
+Status: 404
+{
+  "error": "Record not found"
 }
 ```
 

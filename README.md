@@ -14,11 +14,14 @@
 
 ## Initial Setup <a name="setup"></a>
 1) To get started using this app, you'll first need to clone it and install dependencies.
+
 ```
 git clone git@github.com:fentontaylor/play.git
 npm install
 ```
+
 2) Next, you'll need to set up the database. In the terminal, run:
+
 ```
 psql
 CREATE DATABASE play_dev;
@@ -29,17 +32,22 @@ knex migrate:latest
 knex migrate:latest --env test
 knex seed:run
 ```
+
 3) Finally to start the server using:
+
 ```
 npm start
 ```
+
 4) Use your favorite client, like Postman, or send curl requests to the base url:
+
 ```
 http://localhost:3000/
 ```
 
 ## How to Run Tests <a name="tests"></a>
 Run tests with the command:
+
 ```
 npm test
 ```
@@ -47,28 +55,33 @@ npm test
 ## API Documentation <a name="api_docs"></a>
 
 ### All Requests
+
 #### Base url for all requests:
+
 ```
 https://looney-tunes.herokuapp.com
 ```
+
 ### Endpoints:
+
 #### Favorites
 - [POST /api/v1/favorites](#post_favorites)
 - [GET /api/v1/favorites](#get_favorites)
 - [GET /api/v1/favorites/:id](#get_favorite)
 - [DELETE /api/v1/favorites/:id](#delete_favorites)
+
 #### Playlists
 - [POST /api/v1/playlists](#post_playlists)
 - [GET /api/v1/playlists](#get_playlists)
 - [PUT /api/v1/playlists/:id](#put_playlists)
 - [DELETE /api/v1/playlists/:id](#delete_playlists)
 
-### Add Favorites Request <a name="post_favorites"></a>
+### Create Favorite Request <a name="post_favorites"></a>
 
 ```
 POST /api/v1/favorites
 ```
-POST request must have a JSON body with the required attributes `title`, `artistName`. `rating` and `genre` attributes are fetched from [musixmatch API](https://developer.musixmatch.com/). If `genre` is missing, it will default to unknown.
+POST request must have a JSON body with the required attributes `title`, `artistName`. `rating` and `genre` attributes are fetched from [musixmatch API](https://developer.musixmatch.com/). If `genre` is missing, it will default to 'Unknown'.
 
 #### Example
 
@@ -88,7 +101,11 @@ body:
 Status: 201
 
 {
-  "id": 5
+  "id": 5,
+  "title": "We Will Rock You",
+  "artistName": "Queen",
+  "genre": "Arena Rock",
+  "rating": 78
 }
 ```
 
@@ -110,10 +127,13 @@ GET /api/v1/favorites
 ```
 
 #### Example
+
 ```
 GET https://looney-tunes.herokuapp.com/api/v1/favorites
 ```
-**Success Response**
+
+#### Success Response
+
 ```
 [
   {
@@ -139,7 +159,8 @@ GET https://looney-tunes.herokuapp.com/api/v1/favorites
   }
 ]
 ```
-**Error Responses**
+
+#### Error Responses
 If there are no favorites in the database, a response like the following will be sent:
 
 ```
@@ -155,14 +176,18 @@ Status: 404
 ```
 GET /api/v1/favorites/:id
 ```
+
 GET request will have the id passed in the URL like in the example below.
 
 #### Example
+
 ```
 GET https://looney-tunes.herokuapp.com/api/v1/favorites/3
 
 ```
-**Success Response**
+
+#### Success Response
+
 ```
 [
   {
@@ -174,8 +199,10 @@ GET https://looney-tunes.herokuapp.com/api/v1/favorites/3
   }
 ]
 ```
-**Error Responses**
+
+#### Error Responses
 If the id does not exist in the database, a response like the following will be sent:
+
 ```
 Status: 404
 
@@ -189,17 +216,22 @@ Status: 404
 ```
 DELETE /api/v1/favorites/3
 ```
+
 #### Example
+
 ```
 DELETE https://looney-tunes.herokuapp.com/api/v1/favorites/3
 
 ```
-**Success Response**
+#### Success Response
+
 ```
 Status: 204
 ```
-**Error Responses**
+
+#### Error Responses
 If the id does not exist in the database a response like the following will be sent:
+
 ```
 Status: 404
 
@@ -207,7 +239,45 @@ Status: 404
   "error": "Record not found."
 }
 ```
+
 ## Playlist Endpoints
+
+### Create Playlist Request <a name="post_playlists"></a>
+
+```
+POST /api/v1/playlists
+```
+
+Send a post request with a JSON body containing the attribute `title`. If JSON body is missing, or `title` attribute is missing, the response status will be 400.
+
+### Example
+
+```
+POST https://looney-tunes.herokuapp.com/api/v1/playlists
+```
+
+#### Success Response
+
+```
+Status: 200
+
+{
+  "id": 2,
+  "title": "hype music",
+  "created_at": "2019-12-06T21:05:48.167Z",
+  "updated_at": "2019-12-06T21:05:48.167Z"
+}
+```
+
+### Error Response
+
+```
+Status: 400
+
+{
+  "error": "Missing required attribute <title>"
+}
+```
 
 ### Get Playlists Request <a name="get_playlists"></a>
 
@@ -220,7 +290,7 @@ GET /api/v1/playlists
 GET https://looney-tunes.herokuapp.com/api/v1/playlists
 
 ```
-**Success Response**
+#### Success Response
 ```
 [
     {

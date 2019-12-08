@@ -25,9 +25,8 @@ describe('favoritesHelpers functions', () => {
 
   afterEach(async () => {
     await database.raw('TRUNCATE TABLE favorites CASCADE');
+    setTimeout(() => process.exit(), 2000);
   });
-
-  afterAll(() => setTimeout(() => process.exit(), 1000))
 
   describe('favoriteSongs', () => {
     it('returns a list of all favorite songs', async () => {

@@ -7,6 +7,8 @@ const favoriteSong = helpers.favoriteSong;
 const createFavorite = helpers.createFavorite;
 const seekAndDestroy = helpers.seekAndDestroy;
 
+jest.mock('../../utils/musixService');
+
 describe('favoritesHelpers functions', () => {
   beforeEach(async () => {
     await database.raw('TRUNCATE TABLE favorites CASCADE');
@@ -58,7 +60,7 @@ describe('favoritesHelpers functions', () => {
         rating: 78
       };
 
-      const newFavorite = await createFavorite(fave);
+      const newFavorite = await createFavorite(fave)
       expect(newFavorite[0].title).toBe('We Will Rock You');
       expect(newFavorite[0].artist_name).toBe('Queen');
       expect(newFavorite[0].genre).toBe('Arena Rock');

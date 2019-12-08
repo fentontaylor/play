@@ -7,7 +7,6 @@ const favoriteSong = helpers.favoriteSong;
 const createFavorite = helpers.createFavorite;
 const seekAndDestroy = helpers.seekAndDestroy;
 
-jest.mock('../../utils/musixService');
 
 describe('favoritesHelpers functions', () => {
   beforeEach(async () => {
@@ -25,8 +24,7 @@ describe('favoritesHelpers functions', () => {
 
   afterEach(async () => {
     await database.raw('TRUNCATE TABLE favorites CASCADE');
-    setTimeout(() => process.exit(), 2000);
-  });
+  })
 
   describe('favoriteSongs', () => {
     it('returns a list of all favorite songs', async () => {
@@ -55,6 +53,7 @@ describe('favoritesHelpers functions', () => {
   describe('createFavorite', () => {
     it('creates a new favorite in the database', async () => {
       var fave = {
+        id: 3,
         title: 'We Will Rock You',
         artist_name: 'Queen',
         genre: 'Arena Rock',
@@ -62,6 +61,7 @@ describe('favoritesHelpers functions', () => {
       };
 
       const newFavorite = await createFavorite(fave)
+
       expect(newFavorite[0].title).toBe('We Will Rock You');
       expect(newFavorite[0].artist_name).toBe('Queen');
       expect(newFavorite[0].genre).toBe('Arena Rock');

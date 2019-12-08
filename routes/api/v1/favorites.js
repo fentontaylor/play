@@ -52,13 +52,16 @@ router.post('/', (request, response) => {
 
   fetchSongInfo(title, artist)
   .then(res => {
-    var fav = new Favorite(res);
-
-    createFavorite(fav)
-    .then(attr => {
-      response.status(201).send(attr[0])
-    })
-    .catch(error => response.status(500).send({ error }))
+    if (res.message.body) {
+      let fav = new Favorite(res);
+      createFavorite(fav)
+      .then(attr => {
+        response.status(201).send(attr[0])
+      })
+      .catch(error => response.status(500).send({ error }))
+    } else {
+      response.status(404).send({ error: `No search results for title: '${title}', artistName: '${artist}'`})
+    }
   })
   .catch(error => response.status(500).send({ error }))
 });

@@ -23,9 +23,9 @@ describe('POST /api/v1/playlists/:id/favorites/:id', () => {
 
   it('creates a new playlist_favorite from request params', async () => {
     const res = await request(app)
-      .get('/api/v1/playlists/1/favorites/1');
+      .post('/api/v1/playlists/1/favorites/1');
 
     expect(res.status).toBe(201);
-    expect(res.body).toEqual({ Success: "Under Pressure has been added to Jams!" })
+    expect(res.body).toEqual({ success: "Under Pressure has been added to Jams!" })
   })
 })

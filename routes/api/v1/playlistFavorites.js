@@ -14,7 +14,7 @@ router.post('/:favId', async (request, response) => {
 
   createPlaylistFavorite(playlistId, favId)
   .then(() => {
-    response.status(201).send({ success: `${favorite[0].title} has been added to ${playlist.title}!` })
+    response.status(201).send({ success: `${favorite.title} has been added to ${playlist.title}!` })
   })
 })
 

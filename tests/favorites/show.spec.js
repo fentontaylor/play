@@ -25,15 +25,15 @@ describe("Test GET favorites/:id", () => {
     .get('/api/v1/favorites/1')
 
     expect(response.status).toBe(200)
-    expect(response.body[0].artist_name).toBe('AC/DC')
-    expect(response.body[0].title).toBe('Thunderstruck')
+    expect(response.body.artist_name).toBe('AC/DC')
+    expect(response.body.title).toBe('Thunderstruck')
 
     var response = await request(app)
     .get('/api/v1/favorites/2')
 
     expect(response.status).toBe(200)
-    expect(response.body[0].artist_name).toBe('Toto')
-    expect(response.body[0].title).toBe('Africa')
+    expect(response.body.artist_name).toBe('Toto')
+    expect(response.body.title).toBe('Africa')
   });
 
   it("returns a 404 if id is not found", async () => {

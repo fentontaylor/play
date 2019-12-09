@@ -23,9 +23,10 @@ async function favoriteSong(songId) {
 
 async function createFavorite(fav) {
   try {
-    return await database('favorites')
+    let favorite =  await database('favorites')
       .insert(fav, 'id')
       .returning(['id', 'title', 'artist_name', 'genre', 'rating'])
+    return favorite[0];
   } catch(e) {
     return e;
   }

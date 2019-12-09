@@ -55,8 +55,8 @@ router.post('/', (request, response) => {
     if (res.message.body) {
       let fav = new Favorite(res);
       createFavorite(fav)
-      .then(attr => {
-        response.status(201).send(attr[0])
+      .then(favorite => {
+        response.status(201).send(favorite)
       })
       .catch(error => response.status(500).send({ error }))
     } else {

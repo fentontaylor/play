@@ -62,10 +62,10 @@ describe('favoritesHelpers functions', () => {
 
       const newFavorite = await createFavorite(fave)
 
-      expect(newFavorite[0].title).toBe('We Will Rock You');
-      expect(newFavorite[0].artist_name).toBe('Queen');
-      expect(newFavorite[0].genre).toBe('Arena Rock');
-      expect(newFavorite[0].rating).toBe(78);
+      expect(newFavorite.title).toBe('We Will Rock You');
+      expect(newFavorite.artist_name).toBe('Queen');
+      expect(newFavorite.genre).toBe('Arena Rock');
+      expect(newFavorite.rating).toBe(78);
       expect(newFavorite[1]).toBeUndefined()
     })
   })

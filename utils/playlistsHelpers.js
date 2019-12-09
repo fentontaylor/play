@@ -23,9 +23,10 @@ async function allPlaylists() {
 
 async function createPlaylist(title) {
   try {
-    return await database('playlists')
+    let playlist = await database('playlists')
       .insert({ title: title }, 'id')
       .returning('*');
+    return playlist[0];
   } catch (e) {
     return e;
   }

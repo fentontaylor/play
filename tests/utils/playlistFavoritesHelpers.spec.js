@@ -5,6 +5,7 @@ const helpers = require('../../utils/playlistFavoritesHelpers');
 const createPlaylistFavorite = helpers.createPlaylistFavorite;
 const allPlaylistFavorites = helpers.allPlaylistFavorites;
 const countFavorites = helpers.countFavorites;
+const songAvgRating = helpers.songAvgRating;
 
 describe('playlistFavoritesHelpers functions', () => {
   beforeEach(async () => {
@@ -99,5 +100,26 @@ describe('playlistFavoritesHelpers functions', () => {
     }]
 
     expect(result).toEqual(expected);
+  })
+
+  it('songAvgRating', async () => {
+    let pl = await database('playlists')
+      .insert({ id: 5, title: 'Looney Tunes' })
+      .returning('*');
+
+    let fav1 = await database('favorites')
+      .insert({ id: 7, title: 'Toxic', artist_name: 'Britney Spears', genre: 'Pop', rating: 65 })
+      .returning('*');
+
+    let fav3 = await database('favorites')
+      .insert({ id: 9, title: 'No Scrubs', artist_name: 'TLC', genre: 'Pop', rating: 70 })
+      .returning('*');
+
+    await createPlaylistFavorite(5, 7);
+    await createPlaylistFavorite(5, 9);
+
+    let avg = await songAvgRating(5);
+
+    expect(avg).toBe(67.50);
   })
 })

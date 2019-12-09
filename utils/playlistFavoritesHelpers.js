@@ -31,15 +31,27 @@ const countFavorites = async function(playlistId) {
     let res =  await database('playlist_favorites')
       .join('favorites', { 'favorites.id': 'playlist_favorites.favorite_id' })
       .where({ playlist_id: playlistId })
-
     return res.length;
   } catch(e) {
+    return e;
+  }
+}
 
+const songAvgRating = async function(playlistId) {
+  try {
+    let res = await database('playlist_favorites')
+      .join('favorites', { 'favorites.id': 'playlist_favorites.favorite_id' })
+      .where({ playlist_id: playlistId })
+      .avg('favorites.rating')
+    return parseFloat(parseFloat(res[0].avg).toFixed(2));
+  } catch(e) {
+    return e;
   }
 }
 
 module.exports = {
   createPlaylistFavorite: createPlaylistFavorite,
   allPlaylistFavorites: allPlaylistFavorites,
-  countFavorites: countFavorites
+  countFavorites: countFavorites,
+  songAvgRating: songAvgRating
 }

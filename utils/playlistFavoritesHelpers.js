@@ -13,6 +13,15 @@ const createPlaylistFavorite = async function(playlistId, favoriteId) {
   }
 }
 
+const deletePlaylistFavorite = async function seekAndDestroy(targetId) {
+  try {
+    return await database('playlist_favorites').where({ favorite_id: targetId }).del()
+  } catch (e) {
+    return e;
+  }
+}
+
 module.exports = {
-  createPlaylistFavorite: createPlaylistFavorite
+  createPlaylistFavorite: createPlaylistFavorite,
+  deletePlaylistFavorite: deletePlaylistFavorite
 }

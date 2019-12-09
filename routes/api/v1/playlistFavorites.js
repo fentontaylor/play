@@ -4,6 +4,7 @@ const findFavorite = require("../../../utils/favoritesHelpers").favoriteSong;
 const findPlaylist = require("../../../utils/playlistsHelpers").findPlaylist;
 const helpers = require("../../../utils/playlistFavoritesHelpers");
 const createPlaylistFavorite = helpers.createPlaylistFavorite;
+const deletePlaylistFavorite = helpers.deletePlaylistFavorite;
 
 router.post('/:favId', async (request, response) => {
   const playlistId = request.params.playlistId;
@@ -32,7 +33,7 @@ router.delete('/:favId', async (request, response) => {
       .then(data => {
         if (data) {
           let targetId = request.params.favId
-          seekAndDestroy(targetId)
+          deletePlaylistFavorite(targetId)
           .then(() => response.status(204).send())
         } else {
           response.status(404).json({
@@ -50,12 +51,4 @@ router.delete('/:favId', async (request, response) => {
   .catch(error => response.status(500).send({ error }))
 });
 
-
-async function seekAndDestroy(targetId) {
-  try {
-    return await database('playlist_favorites').where({ favorite_id: targetId }).del()
-  } catch (e) {
-    return e;
-  }
-}
 module.exports = router;

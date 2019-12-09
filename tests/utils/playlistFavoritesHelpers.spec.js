@@ -10,13 +10,16 @@ describe('playlistFavoritesHelpers functions', () => {
     await database.raw('TRUNCATE TABLE playlists CASCADE');
     await database.raw('TRUNCATE TABLE favorites CASCADE');
 
-    playlist1 = await database('playlists')
+    let pl = await database('playlists')
       .insert({ id: 5, title: 'Looney Tunes' })
       .returning('*');
 
-    favorite1 = await database('playlists')
+    let fav = await database('favorites')
       .insert({ id: 7, title: 'Toxic', artist_name: 'Britney Spears', genre: 'Pop', rating: 65 })
       .returning('*');
+    
+    playlist = pl[0];
+    favorite = fav[0];
   });
 
   afterEach(async () => {
@@ -26,9 +29,9 @@ describe('playlistFavoritesHelpers functions', () => {
   });
 
   it('createPlaylistFavorite', async () => {
-    let result = await createPlaylistFavorite(1, 1)
+    let result = await createPlaylistFavorite(playlist.id, favorite.id)
 
-    expect(result.playlist_id).toBe(5);
-    expect(result.favorite_id).toBe(7);
+    expect(result.playlist_id).toBe(playlist.id);
+    expect(result.favorite_id).toBe(favorite.id);
   })
 })

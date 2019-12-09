@@ -26,7 +26,7 @@ router.get('/', (request, response) => {
 router.get('/:id', (request, response) => {
   favoriteSong(request.params.id)
   .then(favorite => {
-    if (favorite.length) {
+    if (favorite) {
       response.status(200).send(favorite)
     } else {
       response.status(404).json({
@@ -55,8 +55,8 @@ router.post('/', (request, response) => {
     if (res.message.body) {
       let fav = new Favorite(res);
       createFavorite(fav)
-      .then(attr => {
-        response.status(201).send(attr[0])
+      .then(favorite => {
+        response.status(201).send(favorite)
       })
       .catch(error => response.status(500).send({ error }))
     } else {
@@ -69,7 +69,7 @@ router.post('/', (request, response) => {
 router.delete('/:id', (request, response) => {
   favoriteSong(request.params.id)
   .then(favorite => {
-    if (favorite.length) {
+    if (favorite) {
       let targetId = request.params.id
       seekAndDestroy(targetId)
       .then(() => response.status(204).send())

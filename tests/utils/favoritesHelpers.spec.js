@@ -41,11 +41,11 @@ describe('favoritesHelpers functions', () => {
   describe('favoriteSong', () => {
     it('returns a single favorite song by id', async () => {
       const favorite = await favoriteSong(2);
-      expect(favorite[0].id).toBe(2);
-      expect(favorite[0].title).toBe('Africa');
-      expect(favorite[0].artist_name).toBe('Toto');
-      expect(favorite[0].genre).toBe('pop');
-      expect(favorite[0].rating).toBe(100);
+      expect(favorite.id).toBe(2);
+      expect(favorite.title).toBe('Africa');
+      expect(favorite.artist_name).toBe('Toto');
+      expect(favorite.genre).toBe('pop');
+      expect(favorite.rating).toBe(100);
       expect(favorite[1]).toBeUndefined()
     })
   })
@@ -62,10 +62,10 @@ describe('favoritesHelpers functions', () => {
 
       const newFavorite = await createFavorite(fave)
 
-      expect(newFavorite[0].title).toBe('We Will Rock You');
-      expect(newFavorite[0].artist_name).toBe('Queen');
-      expect(newFavorite[0].genre).toBe('Arena Rock');
-      expect(newFavorite[0].rating).toBe(78);
+      expect(newFavorite.title).toBe('We Will Rock You');
+      expect(newFavorite.artist_name).toBe('Queen');
+      expect(newFavorite.genre).toBe('Arena Rock');
+      expect(newFavorite.rating).toBe(78);
       expect(newFavorite[1]).toBeUndefined()
     })
   })

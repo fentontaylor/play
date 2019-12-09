@@ -50,14 +50,28 @@ describe('playlistFavoritesHelpers functions', () => {
       .returning('*');
 
     let fav3 = await database('favorites')
-      .insert({ id: 9, title: 'No Scrubs', artist_name: 'TLC', genre: 'Pop', rating: 67 })
+      .insert({ id: 9, title: 'No Scrubs', artist_name: 'TLC', genre: 'Pop', rating: 75 })
       .returning('*');
 
     await createPlaylistFavorite(5, 7);
     await createPlaylistFavorite(5, 9);
 
     let result = await allPlaylistFavorites(5);
+    let expected = [{
+      id: 7,
+      title: 'Toxic',
+      artist_name: 'Britney Spears',
+      genre: 'Pop',
+      rating: 65
+    },
+    {
+      id: 9,
+      title: 'No Scrubs',
+      artist_name: 'TLC',
+      genre: 'Pop',
+      rating: 75
+    }]
 
-    expect(result).toEqual([fav1, fav3]);
+    expect(result).toEqual(expected);
   })
 })

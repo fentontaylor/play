@@ -36,6 +36,23 @@ describe('playlistFavoritesHelpers functions', () => {
     expect(result.favorite_id).toBe(favorite.id);
   })
 
+  it('countFavorites', async => {
+    await database('favorites')
+      .insert({ id: 7, title: 'Toxic', artist_name: 'Britney Spears', genre: 'Pop', rating: 65 })
+    
+    let songCount = await countFavorites(5);
+    expect(soungCount).toBe(1);
+
+    await database('favorites')
+      .insert({ id: 8, title: 'I Want It That Way', artist_name: 'Backstreet Boys', genre: 'Pop', rating: 66 })
+
+    await database('favorites')
+      .insert({ id: 9, title: 'No Scrubs', artist_name: 'TLC', genre: 'Pop', rating: 75 })
+
+    let songCount = await countFavorites(5);
+    expect(soungCount).toBe(3);
+  })
+
   it('allPlaylistFavorites', async () => {
     let pl = await database('playlists')
       .insert({ id: 5, title: 'Looney Tunes' })

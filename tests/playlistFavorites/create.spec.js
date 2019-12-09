@@ -9,6 +9,8 @@ const database = require('knex')(configuration);
 describe('POST /api/v1/playlists/:id/favorites/:id', () => {
   beforeEach(async () => {
     await database.raw('TRUNCATE TABLE playlist_favorites CASCADE');
+    await database.raw('TRUNCATE TABLE playlists CASCADE');
+    await database.raw('TRUNCATE TABLE favorites CASCADE');
 
     await database('favorites')
       .insert({ id: 1, title: 'Under Pressure', artist_name: 'Queen', genre: 'Rock', rating: 75 })
@@ -19,6 +21,8 @@ describe('POST /api/v1/playlists/:id/favorites/:id', () => {
 
   afterEach(async () => {
     await database.raw('TRUNCATE TABLE playlist_favorites CASCADE');
+    await database.raw('TRUNCATE TABLE playlists CASCADE');
+    await database.raw('TRUNCATE TABLE favorites CASCADE');
   })
 
   it('creates a new playlist_favorite from request params', async () => {
@@ -27,5 +31,21 @@ describe('POST /api/v1/playlists/:id/favorites/:id', () => {
 
     expect(res.status).toBe(201);
     expect(res.body).toEqual({ success: "Under Pressure has been added to Jams!" })
+  })
+
+  it("sad path: returns 400 if it can't find playlist", async () => {
+    const res = await request(app)
+      .post('/api/v1/playlists/2/favorites/1');
+    
+    expect(res.status).toBe(400)
+    expect(res.body).toEqual({ error: 'Could not create record with playlist_id: 2, favorite_id: 1' })
+  })
+
+  it("sad path: returns 400 if it can't find favorite", async () => {
+    const res = await request(app)
+      .post('/api/v1/playlists/1/favorites/2');
+
+    expect(res.status).toBe(400)
+    expect(res.body).toEqual({ error: 'Could not create record with playlist_id: 1, favorite_id: 2' })
   })
 })

@@ -4,6 +4,7 @@ const database = require('knex')(configuration);
 const helpers = require('../../utils/playlistFavoritesHelpers');
 const createPlaylistFavorite = helpers.createPlaylistFavorite;
 const allPlaylistFavorites = helpers.allPlaylistFavorites;
+const countFavorites = helpers.countFavorites;
 
 describe('playlistFavoritesHelpers functions', () => {
   beforeEach(async () => {
@@ -36,12 +37,17 @@ describe('playlistFavoritesHelpers functions', () => {
     expect(result.favorite_id).toBe(favorite.id);
   })
 
-  it('countFavorites', async => {
+  it('countFavorites', async () => {
+    await database('playlists')
+      .insert({ id: 5, title: 'Looney Tunes' })
+
     await database('favorites')
       .insert({ id: 7, title: 'Toxic', artist_name: 'Britney Spears', genre: 'Pop', rating: 65 })
     
-    let songCount = await countFavorites(5);
-    expect(soungCount).toBe(1);
+    await createPlaylistFavorite(5, 7);
+
+    var songCount = await countFavorites(5);
+    expect(songCount).toBe(1);
 
     await database('favorites')
       .insert({ id: 8, title: 'I Want It That Way', artist_name: 'Backstreet Boys', genre: 'Pop', rating: 66 })
@@ -49,8 +55,11 @@ describe('playlistFavoritesHelpers functions', () => {
     await database('favorites')
       .insert({ id: 9, title: 'No Scrubs', artist_name: 'TLC', genre: 'Pop', rating: 75 })
 
-    let songCount = await countFavorites(5);
-    expect(soungCount).toBe(3);
+    await createPlaylistFavorite(5, 8);
+    await createPlaylistFavorite(5, 9);
+
+    var songCount = await countFavorites(5);
+    expect(songCount).toBe(3);
   })
 
   it('allPlaylistFavorites', async () => {

@@ -13,6 +13,20 @@ const createPlaylistFavorite = async function(playlistId, favoriteId) {
   }
 }
 
+const allPlaylistFavorites = async function(playlistId) {
+  try {
+    let res = await database('playlist_favorites')
+      .select('favorites.id', 'favorites.title', 'favorites.artist_name', 'favorites.genre', 'favorites.rating')
+      .join('favorites', { 'favorites.id': 'playlist_favorites.favorite_id'})
+      .where({ playlist_id: playlistId })
+
+    return res;
+  } catch(e) {
+    return e;
+  }
+}
+
 module.exports = {
-  createPlaylistFavorite: createPlaylistFavorite
+  createPlaylistFavorite: createPlaylistFavorite,
+  allPlaylistFavorites: allPlaylistFavorites
 }

@@ -23,8 +23,18 @@ describe("DELETE /api/v1/playlists/:id/favorites/:id", () => {
     await database('favorites')
       .insert({ id: 1, title: 'Keep It Real', artist_name: 'SunSquabi', genre: 'Electronic', rating: 82 })
 
+    await database('favorites')
+      .insert({ id: 2, title: 'Open Rythms', artist_name: 'Bodies Of Water', genre: 'Indie', rating: 82 })
+
     await database('playlists')
       .insert({ id: 1, title: 'Focus On the Task' })
+
+    await database('playlist_favorites')
+      .insert({ id: 1, playlist_id: 1, favorite_id: 1})
+
+    await database('playlist_favorites')
+      .insert({ id: 2, playlist_id: 1, favorite_id: 2})
+
     var response = await request(app)
       .delete('/api/v1/playlists/1/favorites/1')
 

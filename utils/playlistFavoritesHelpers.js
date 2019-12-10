@@ -5,6 +5,16 @@ const plHelpers = require('./playlistsHelpers');
 const findPlaylist = plHelpers.findPlaylist;
 const dateFormat = require('dateformat');
 
+async function findPlaylistFavorite(playlistId, favoriteId) {
+  try {
+    return await database('playlist_favorites')
+      .where({ playlist_id: playlistId, favorite_id: favoriteId })
+      .first()
+  } catch(e) {
+    return e;
+  }
+}
+
 async function createPlaylistFavorite(playlistId, favoriteId) {
   try {
     let result = await database('playlist_favorites')
@@ -88,6 +98,7 @@ async function deletePlaylistFavorite(targetId) {
 }
 
 module.exports = {
+  findPlaylistFavorite: findPlaylistFavorite,
   createPlaylistFavorite: createPlaylistFavorite,
   allPlaylistFavorites: allPlaylistFavorites,
   countFavorites: countFavorites,

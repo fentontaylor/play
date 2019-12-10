@@ -5,10 +5,11 @@ const findPlaylist = require("../../../utils/playlistsHelpers").findPlaylist;
 const helpers = require("../../../utils/playlistFavoritesHelpers");
 const createPlaylistFavorite = helpers.createPlaylistFavorite;
 const deletePlaylistFavorite = helpers.deletePlaylistFavorite;
+const playlistInfo = helpers.playlistInfo;
 
 router.post('/:favId', async (request, response) => {
-  const playlistId = request.params.playlistId;
-  const favId = request.params.favId;
+  const { playlistId } = request.params;
+  const { favId } = request.params;
 
   const favorite = await findFavorite(favId);
   const playlist = await findPlaylist(playlistId);
@@ -51,4 +52,21 @@ router.delete('/:favId', async (request, response) => {
   .catch(error => response.status(500).send({ error }))
 });
 
+router.get('/', (request, response) => {
+  const { playlistId } = request.params
+  
+  findPlaylist(playlistId)
+  .then(playlist => {
+    if (playlist) {
+      playlistInfo(playlistId)
+      .then(info => {
+        response.status(200).send(info)
+      })
+      .catch(error => response.status(500).send({ error }))
+    } else {
+      response.status(404).send({ error: 'Record not found'})
+    }
+  })
+  .catch(error => response.status(500).send({ error }))
+})
 module.exports = router;

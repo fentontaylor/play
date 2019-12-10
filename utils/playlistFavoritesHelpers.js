@@ -46,7 +46,11 @@ async function songAvgRating(playlistId) {
       .join('favorites', { 'favorites.id': 'playlist_favorites.favorite_id' })
       .where({ playlist_id: playlistId })
       .avg('favorites.rating')
-    return parseFloat(parseFloat(res[0].avg).toFixed(2));
+    if (res[0].avg === null) {
+      return 0;
+    } else {
+      return parseFloat(parseFloat(res[0].avg).toFixed(2));
+    }
   } catch(e) {
     return e;
   }

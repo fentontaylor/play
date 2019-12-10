@@ -2,7 +2,7 @@ const environment = process.env.NODE_ENV || 'development';
 const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
 
-const findPlaylist = async function(id) {
+async function findPlaylist(id) {
   try {
     let playlist = await database('playlists')
       .where({ id: id });
@@ -44,7 +44,7 @@ async function updatePlaylist(id, title) {
   }
 }
 
-const deletePlaylist = async function(id) {
+async function deletePlaylist(id) {
   try {
     return await database('playlists')
       .where({ id: id })

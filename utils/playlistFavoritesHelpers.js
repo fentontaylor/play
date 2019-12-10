@@ -13,9 +13,11 @@ const createPlaylistFavorite = async function(playlistId, favoriteId) {
   }
 }
 
-const deletePlaylistFavorite = async function seekAndDestroy(playlistId, favId) {
+async function deletePlaylistFavorite(playlistId, favId) {
   try {
-    return await database('playlist_favorites').where({ playlist_id: playlistId, favorite_id: favId }).del()
+    return await database('playlist_favorites')
+      .where({ playlist_id: playlistId, favorite_id: favId })
+      .del()
   } catch (e) {
     return e;
   }

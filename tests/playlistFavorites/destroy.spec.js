@@ -29,11 +29,17 @@ describe("DELETE /api/v1/playlists/:id/favorites/:id", () => {
     await database('playlists')
       .insert({ id: 1, title: 'Focus On the Task' })
 
+    await database('playlists')
+      .insert({ id: 2, title: 'Sample Playlist' })
+
     await database('playlist_favorites')
       .insert({ id: 1, playlist_id: 1, favorite_id: 1})
 
     await database('playlist_favorites')
-      .insert({ id: 2, playlist_id: 1, favorite_id: 2})
+      .insert({ id: 2, playlist_id: 2, favorite_id: 1})
+
+    await database('playlist_favorites')
+      .insert({ id: 3, playlist_id: 2, favorite_id: 2})
 
     var response = await request(app)
       .delete('/api/v1/playlists/1/favorites/1')

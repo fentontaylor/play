@@ -45,10 +45,17 @@ describe("DELETE /api/v1/playlists/:id/favorites/:id", () => {
       .delete('/api/v1/playlists/1/favorites/1')
 
     expect(response.status).toBe(204)
+
+    let result = await database('playlist_favorites')
+    .select('*')
+
+    expect(result).toEqual([
+      { id: 2, playlist_id: 2, favorite_id: 1 },
+      { id: 3, playlist_id: 2, favorite_id: 2 }
+    ])
   });
 
   it("returns a 404 if id is not found", async () => {
-
     var response = await request(app)
     .delete('/api/v1/playlists/1/favorites/1')
 

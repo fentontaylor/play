@@ -72,10 +72,21 @@ async function playlistInfo(playlistId) {
   }
 }
 
+async function deletePlaylistFavorite(targetId) {
+  try {
+    return await database('playlist_favorites')
+      .where({ favorite_id: targetId })
+      .del()
+  } catch (e) {
+    return e;
+  }
+}
+
 module.exports = {
   createPlaylistFavorite: createPlaylistFavorite,
   allPlaylistFavorites: allPlaylistFavorites,
   countFavorites: countFavorites,
   songAvgRating: songAvgRating,
-  playlistInfo: playlistInfo
+  playlistInfo: playlistInfo,
+  deletePlaylistFavorite: deletePlaylistFavorite
 }

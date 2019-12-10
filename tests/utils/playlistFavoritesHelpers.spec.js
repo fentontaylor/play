@@ -7,6 +7,7 @@ const allPlaylistFavorites = helpers.allPlaylistFavorites;
 const countFavorites = helpers.countFavorites;
 const songAvgRating = helpers.songAvgRating;
 const playlistInfo = helpers.playlistInfo;
+const findPlaylistFavorite = helpers.findPlaylistFavorite;
 const dateFormat = require('dateformat');
 
 describe('playlistFavoritesHelpers functions', () => {
@@ -21,6 +22,26 @@ describe('playlistFavoritesHelpers functions', () => {
     await database.raw('TRUNCATE TABLE playlists CASCADE');
     await database.raw('TRUNCATE TABLE favorites CASCADE');
   });
+
+  it('findPlaylistFavorite', async () => {
+    var record = await findPlaylistFavorite(5, 7);
+
+    expect(record).toBeUndefined();
+
+    await database('playlists')
+      .insert({ id: 5, title: 'Looney Tunes' });
+
+    await database('favorites')
+      .insert({ id: 7, title: 'Toxic', artist_name: 'Britney Spears', genre: 'Pop', rating: 65 });
+
+    let playlistFavorite = await database('playlist_favorites')
+      .insert({ id: 1, playlist_id: 5, favorite_id: 7 })
+      .returning('*');
+    
+    var record = await findPlaylistFavorite(5, 7);
+
+    expect(record).toEqual(playlistFavorite[0]);
+  })
 
   it('createPlaylistFavorite', async () => {
     let pl = await database('playlists')

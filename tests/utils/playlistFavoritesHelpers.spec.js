@@ -7,6 +7,7 @@ const allPlaylistFavorites = helpers.allPlaylistFavorites;
 const countFavorites = helpers.countFavorites;
 const songAvgRating = helpers.songAvgRating;
 const playlistInfo = helpers.playlistInfo;
+const dateFormat = require('dateformat');
 
 describe('playlistFavoritesHelpers functions', () => {
   beforeEach(async () => {
@@ -163,8 +164,8 @@ describe('playlistFavoritesHelpers functions', () => {
           "rating": 30
         }
       ],
-      "createdAt": pl[0].created_at,
-      "updatedAt": pl[0].updated_at
+      "createdAt": dateFormat(pl[0].created_at, "isoDateTime"),
+      "updatedAt": dateFormat(pl[0].updated_at, "isoDateTime")
     }
 
     expect(result).toEqual(expected);

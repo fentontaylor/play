@@ -3,6 +3,7 @@ const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
 const plHelpers = require('./playlistsHelpers');
 const findPlaylist = plHelpers.findPlaylist;
+const dateFormat = require('dateformat');
 
 async function createPlaylistFavorite(playlistId, favoriteId) {
   try {
@@ -64,8 +65,8 @@ async function playlistInfo(playlistId) {
       songCount: songCount,
       songAvgRating: avgRating,
       favorites: favorites,
-      createdAt: info.created_at,
-      updatedAt: info.updated_at
+      createdAt: dateFormat(info.created_at, "isoDateTime"),
+      updatedAt: dateFormat(info.updated_at, "isoDateTime")
     }
   } catch(e) {
     return e;

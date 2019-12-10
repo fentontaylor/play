@@ -8,6 +8,7 @@ const database = require('knex')(configuration);
 
 const helpers = require('../../utils/playlistFavoritesHelpers');
 const createPlaylistFavorite = helpers.createPlaylistFavorite;
+const dateFormat = require('dateformat');
 
 describe('GET /api/v1/playlists/:playlistId/favorites', () => {
   beforeEach(async () => {
@@ -59,8 +60,8 @@ describe('GET /api/v1/playlists/:playlistId/favorites', () => {
           "rating": 30
         }
       ],
-      "createdAt": pl[0].created_at,
-      "updatedAt": pl[0].updated_at
+      "createdAt": dateFormat(pl[0].created_at, "isoDateTime"),
+      "updatedAt": dateFormat(pl[0].updated_at, "isoDateTime")
     }
 
     let result = await request(app)

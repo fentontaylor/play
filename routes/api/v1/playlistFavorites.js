@@ -32,8 +32,9 @@ router.delete('/:favId', async (request, response) => {
       findFavorite(request.params.favId)
       .then(data => {
         if (data) {
-          let targetId = request.params.favId
-          deletePlaylistFavorite(targetId)
+          let favId = request.params.favId
+          let playlistId = request.params.playlistId
+          deletePlaylistFavorite(playlistId, favId)
           .then(() => response.status(204).send())
         } else {
           response.status(404).json({

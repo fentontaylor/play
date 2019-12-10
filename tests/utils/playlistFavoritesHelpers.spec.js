@@ -65,22 +65,26 @@ describe('playlistFavoritesHelpers functions', () => {
     expect(songCount).toBe(3);
   })
 
-  it('allPlaylistFavorites', async () => {
-    let pl = await database('playlists')
+  it('countFavorites with no favorites returns 0', async () => {
+    await database('playlists')
       .insert({ id: 5, title: 'Looney Tunes' })
-      .returning('*');
 
-    let fav1 = await database('favorites')
-      .insert({ id: 7, title: 'Toxic', artist_name: 'Britney Spears', genre: 'Pop', rating: 65 })
-      .returning('*');
+    var songCount = await countFavorites(5);
+    expect(songCount).toBe(0);
+  })
+
+  it('allPlaylistFavorites', async () => {
+    await database('playlists')
+      .insert({ id: 5, title: 'Looney Tunes' });
+
+    await database('favorites')
+      .insert({ id: 7, title: 'Toxic', artist_name: 'Britney Spears', genre: 'Pop', rating: 65 });
     
-    let fav2 = await database('favorites')
-      .insert({ id: 8, title: 'I Want It That Way', artist_name: 'Backstreet Boys', genre: 'Pop', rating: 66 })
-      .returning('*');
+    await database('favorites')
+      .insert({ id: 8, title: 'I Want It That Way', artist_name: 'Backstreet Boys', genre: 'Pop', rating: 66 });
 
-    let fav3 = await database('favorites')
-      .insert({ id: 9, title: 'No Scrubs', artist_name: 'TLC', genre: 'Pop', rating: 75 })
-      .returning('*');
+    await database('favorites')
+      .insert({ id: 9, title: 'No Scrubs', artist_name: 'TLC', genre: 'Pop', rating: 75 });
 
     await createPlaylistFavorite(5, 7);
     await createPlaylistFavorite(5, 9);
@@ -104,18 +108,23 @@ describe('playlistFavoritesHelpers functions', () => {
     expect(result).toEqual(expected);
   })
 
+  it('allPlaylistFavorites with no favorites returns []', async () => {
+    await database('playlists')
+      .insert({ id: 5, title: 'Looney Tunes' });
+    
+    let favorites = await allPlaylistFavorites(5);
+    expect(favorites).toEqual([]);
+  })
+
   it('songAvgRating', async () => {
-    let pl = await database('playlists')
-      .insert({ id: 5, title: 'Looney Tunes' })
-      .returning('*');
+    await database('playlists')
+      .insert({ id: 5, title: 'Looney Tunes' });
 
-    let fav1 = await database('favorites')
-      .insert({ id: 7, title: 'Toxic', artist_name: 'Britney Spears', genre: 'Pop', rating: 65 })
-      .returning('*');
+    await database('favorites')
+      .insert({ id: 7, title: 'Toxic', artist_name: 'Britney Spears', genre: 'Pop', rating: 65 });
 
-    let fav3 = await database('favorites')
-      .insert({ id: 9, title: 'No Scrubs', artist_name: 'TLC', genre: 'Pop', rating: 70 })
-      .returning('*');
+    await database('favorites')
+      .insert({ id: 9, title: 'No Scrubs', artist_name: 'TLC', genre: 'Pop', rating: 70 });
 
     await createPlaylistFavorite(5, 7);
     await createPlaylistFavorite(5, 9);
@@ -125,18 +134,25 @@ describe('playlistFavoritesHelpers functions', () => {
     expect(avg).toBe(67.50);
   })
 
+  it('songAvgRating with no favorites returns 0', async () => {
+    await database('playlists')
+      .insert({ id: 5, title: 'Looney Tunes' });
+
+    let avg = await songAvgRating(5);
+
+    expect(avg).toBe(0);
+  })
+
   it('playlistInfo', async () => {
     let pl = await database('playlists')
       .insert({ id: 1, title: 'Cleaning House' })
       .returning('*');
 
-    let fav1 = await database('favorites')
-      .insert({ id: 1, title: 'We Will Rock You', artist_name: 'Queen', genre: 'Rock', rating: 25 })
-      .returning('*');
+    await database('favorites')
+      .insert({ id: 1, title: 'We Will Rock You', artist_name: 'Queen', genre: 'Rock', rating: 25 });
 
-    let fav3 = await database('favorites')
-      .insert({ id: 4, title: 'Back in Black', artist_name: 'AC/DC', genre: 'Rock', rating: 30 })
-      .returning('*');
+    await database('favorites')
+      .insert({ id: 4, title: 'Back in Black', artist_name: 'AC/DC', genre: 'Rock', rating: 30 });
 
     await createPlaylistFavorite(1, 1);
     await createPlaylistFavorite(1, 4);

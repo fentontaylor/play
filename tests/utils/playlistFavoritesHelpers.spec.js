@@ -6,6 +6,7 @@ const createPlaylistFavorite = helpers.createPlaylistFavorite;
 const allPlaylistFavorites = helpers.allPlaylistFavorites;
 const countFavorites = helpers.countFavorites;
 const songAvgRating = helpers.songAvgRating;
+const playlistInfo = helpers.playlistInfo;
 
 describe('playlistFavoritesHelpers functions', () => {
   beforeEach(async () => {
@@ -121,5 +122,51 @@ describe('playlistFavoritesHelpers functions', () => {
     let avg = await songAvgRating(5);
 
     expect(avg).toBe(67.50);
+  })
+
+  it('playlistInfo', async () => {
+    let pl = await database('playlists')
+      .insert({ id: 1, title: 'Cleaning House' })
+      .returning('*');
+
+    let fav1 = await database('favorites')
+      .insert({ id: 1, title: 'We Will Rock You', artist_name: 'Queen', genre: 'Rock', rating: 25 })
+      .returning('*');
+
+    let fav3 = await database('favorites')
+      .insert({ id: 4, title: 'Back in Black', artist_name: 'AC/DC', genre: 'Rock', rating: 30 })
+      .returning('*');
+
+    await createPlaylistFavorite(1, 1);
+    await createPlaylistFavorite(1, 4);
+
+    let result = await playlistInfo(1);
+
+    let expected = {
+      "id": 1,
+      "title": "Cleaning House",
+      "songCount": 2,
+      "songAvgRating": 27.5,
+      "favorites": [
+        {
+          "id": 1,
+          "title": "We Will Rock You",
+          "artist_name": "Queen",
+          "genre": "Rock",
+          "rating": 25
+        },
+        {
+          "id": 4,
+          "title": "Back in Black",
+          "artist_name": "AC/DC",
+          "genre": "Rock",
+          "rating": 30
+        }
+      ],
+      "createdAt": pl[0].created_at,
+      "updatedAt": pl[0].updated_at
+    }
+
+    expect(result).toEqual(expected);
   })
 })

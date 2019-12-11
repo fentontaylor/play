@@ -1,5 +1,6 @@
 exports.seed = function(knex) {
-  return knex('favorites').del()
+  return knex('playlist_favorites').del()
+  .then(() => knex('favorites').del()
   .then(() => {
     return knex('favorites').insert([
       {
@@ -23,6 +24,6 @@ exports.seed = function(knex) {
     ])
     .then(() => console.log('Favorites seeding complete!'))
     .catch(error => console.log(`Error seeding data: ${error}`))
-  })
+  }))
   .catch(error => console.log(`Error seeding data: ${error}`));
 };

@@ -1,6 +1,8 @@
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
+const helpers = require('./playlistFavoritesHelpers');
+const { playlistInfo } = helpers;
 
 async function findPlaylist(id) {
   try {
@@ -24,8 +26,12 @@ async function findPlaylistByTitle(title) {
 
 async function allPlaylists() {
   try {
-    return await database('playlists')
-      .columns('*');
+    let playlistIds = await database('playlists')
+      .pluck('id');
+    const promises = playlistIds.map(async (id) => {
+      return await playlistInfo(id)
+    });
+    return Promise.all(promises);
   } catch (e) {
     return e;
   }
@@ -71,4 +77,4 @@ module.exports = {
   updatePlaylist: updatePlaylist,
   deletePlaylist: deletePlaylist,
   allPlaylists: allPlaylists
-}
+};

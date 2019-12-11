@@ -48,4 +48,17 @@ describe('POST /api/v1/playlists/:id/favorites/:id', () => {
     expect(res.status).toBe(400)
     expect(res.body).toEqual({ error: 'Could not create record with playlist_id: 1, favorite_id: 2' })
   })
+
+  it("sad path: returns 409 if favorite already exists", async () => {
+    await database('playlist_favorites')
+      .insert({ playlist_id: 1, favorite_id: 1 });
+    
+    const res = await request(app)
+      .post('/api/v1/playlists/1/favorites/1');
+
+    expect(res.status).toBe(409);
+    expect(res.body).toEqual({
+      "error": "Record already exists with playlist_id: 1, favorite_id: 1"
+    })
+  })
 })

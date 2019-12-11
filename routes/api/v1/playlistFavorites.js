@@ -3,9 +3,12 @@ var router = express.Router({ mergeParams: true });
 const findFavorite = require("../../../utils/favoritesHelpers").favoriteSong;
 const findPlaylist = require("../../../utils/playlistsHelpers").findPlaylist;
 const helpers = require("../../../utils/playlistFavoritesHelpers");
-const createPlaylistFavorite = helpers.createPlaylistFavorite;
-const deletePlaylistFavorite = helpers.deletePlaylistFavorite;
-const playlistInfo = helpers.playlistInfo;
+const {
+  createPlaylistFavorite,
+  deletePlaylistFavorite,
+  findPlaylistFavorite,
+  playlistInfo
+} = helpers;
 
 router.post('/:favId', async (request, response) => {
   const { playlistId } = request.params;
@@ -14,21 +17,35 @@ router.post('/:favId', async (request, response) => {
   const favorite = await findFavorite(favId);
   const playlist = await findPlaylist(playlistId);
 
-  if (favorite && playlist) {
-    createPlaylistFavorite(playlistId, favId)
-    .then(() => {
-      response.status(201).send({ success: `${favorite.title} has been added to ${playlist.title}!` })
+  if (!(playlist && favorite)) {
+    return response.status(400).send({
+      error: `Could not create record with playlist_id: ${playlistId}, favorite_id: ${favId}`
     })
-    .catch(error => response.status(500).send({ error }))
-  } else {
-    response.status(400).send({ error: `Could not create record with playlist_id: ${playlistId}, favorite_id: ${favId}`})
   }
 
+  findPlaylistFavorite(playlistId, favId)
+  .then(result => {
+    if (!result) {
+      createPlaylistFavorite(playlistId, favId)
+      .then(() => {
+        response.status(201).send({
+          success: `${favorite.title} has been added to ${playlist.title}!`
+        })
+      })
+      .catch(error => response.status(500).send({ error }))
+    } else {
+      response.status(409).send({
+        error: `Record already exists with playlist_id: ${playlistId}, favorite_id: ${favId}`
+      })
+    }
+  })
+  .catch(error => response.status(500).send({ error }))
 })
 
 router.delete('/:favId', async (request, response) => {
-  const favId = request.params.favId
-  const playlistId = request.params.playlistId
+  const { favId } = request.params;
+  const { playlistId } = request.params;
+
   findPlaylist(playlistId)
   .then(info => {
     if (info) {
@@ -70,4 +87,5 @@ router.get('/', (request, response) => {
   })
   .catch(error => response.status(500).send({ error }))
 })
+
 module.exports = router;

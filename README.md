@@ -287,6 +287,12 @@ Status: 400
 {
   "error": "Missing required attribute <title>"
 }
+
+Status: 400
+
+{
+  "error": "Playlist already exists with title: 'some title'"
+}
 ```
 
 ### Get Playlists Request <a name="get_playlists"></a>

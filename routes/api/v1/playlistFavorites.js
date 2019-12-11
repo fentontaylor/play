@@ -1,18 +1,19 @@
 var express = require('express');
 var router = express.Router({ mergeParams: true });
 const findFavorite = require("../../../utils/favoritesHelpers").favoriteSong;
-const findPlaylist = require("../../../utils/playlistsHelpers").findPlaylist;
+
 const helpers = require("../../../utils/playlistFavoritesHelpers");
 const createPlaylistFavorite = helpers.createPlaylistFavorite;
 const deletePlaylistFavorite = helpers.deletePlaylistFavorite;
 const playlistInfo = helpers.playlistInfo;
+const getPlaylist = helpers.getPlaylist;
 
 router.post('/:favId', async (request, response) => {
   const { playlistId } = request.params;
   const { favId } = request.params;
 
   const favorite = await findFavorite(favId);
-  const playlist = await findPlaylist(playlistId);
+  const playlist = await getPlaylist(playlistId);
 
   if (favorite && playlist) {
     createPlaylistFavorite(playlistId, favId)
@@ -23,13 +24,12 @@ router.post('/:favId', async (request, response) => {
   } else {
     response.status(400).send({ error: `Could not create record with playlist_id: ${playlistId}, favorite_id: ${favId}`})
   }
-
 })
 
 router.delete('/:favId', async (request, response) => {
   const favId = request.params.favId
   const playlistId = request.params.playlistId
-  findPlaylist(playlistId)
+  getPlaylist(playlistId)
   .then(info => {
     if (info) {
       findFavorite(favId)
@@ -55,8 +55,7 @@ router.delete('/:favId', async (request, response) => {
 
 router.get('/', (request, response) => {
   const { playlistId } = request.params
-  
-  findPlaylist(playlistId)
+  getPlaylist(playlistId)
   .then(playlist => {
     if (playlist) {
       playlistInfo(playlistId)

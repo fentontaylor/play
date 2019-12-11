@@ -1,15 +1,14 @@
 var express = require('express');
 var router = express.Router();
 const helpers = require('../../../utils/playlistsHelpers');
-const findPlaylist = helpers.findPlaylist;
-const createPlaylist = helpers.createPlaylist;
-const deletePlaylist = helpers.deletePlaylist;
-const allPlaylists = helpers.allPlaylists;
-const updatePlaylist = helpers.updatePlaylist;
-
-const environment = process.env.NODE_ENV || 'development';
-const configuration = require('../../../knexfile')[environment];
-const database = require('knex')(configuration);
+const {
+  findPlaylist,
+  findPlaylistByTitle,
+  createPlaylist,
+  deletePlaylist,
+  allPlaylists,
+  updatePlaylist
+} = helpers;
 
 router.get('/', (request, response) => {
   allPlaylists()
@@ -41,7 +40,7 @@ router.delete('/:id', (request, response) => {
   .catch(error => response.status(500).send({ error }));
 })
 
-router.post('/', async (request, response) => {
+router.post('/', (request, response) => {
   var body = request.body;
   var title = body.title;
 
@@ -50,19 +49,17 @@ router.post('/', async (request, response) => {
       .send({ error: `Missing required attribute <title>` });
   }
 
-  let result = await database('playlists')
-    .where({title: title})
-
-  if (result[0]){
-    return response.status(409)
-      .send({error: `Playlist already exists with title: '${title}'`})
-  }
-  
-  createPlaylist(title)
-  .then(data => {
-    response.status(201).send(data)
+  findPlaylistByTitle(title)
+  .then(result => {
+    if (result) {
+      response.status(409)
+        .send({ error: `Playlist already exists with title: '${title}'` })
+    } else {
+      createPlaylist(title)
+      .then(data => response.status(201).send(data))
+      .catch(error => response.status(500).send({ error }))
+    }
   })
-  .catch(error => response.status(500).send({error}))
 });
 
 router.put('/:id', (request, response) => {

@@ -12,6 +12,16 @@ async function findPlaylist(id) {
   }
 }
 
+async function findPlaylistByTitle(title) {
+  try {
+    return await database('playlists')
+      .where('title', title)
+      .first()
+  } catch(e) {
+    return e;
+  }
+}
+
 async function allPlaylists() {
   try {
     return await database('playlists')
@@ -56,6 +66,7 @@ async function deletePlaylist(id) {
 
 module.exports = {
   findPlaylist: findPlaylist,
+  findPlaylistByTitle: findPlaylistByTitle,
   createPlaylist: createPlaylist,
   updatePlaylist: updatePlaylist,
   deletePlaylist: deletePlaylist,

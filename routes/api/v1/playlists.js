@@ -7,6 +7,10 @@ const deletePlaylist = helpers.deletePlaylist;
 const allPlaylists = helpers.allPlaylists;
 const updatePlaylist = helpers.updatePlaylist;
 
+const environment = process.env.NODE_ENV || 'development';
+const configuration = require('../../../knexfile')[environment];
+const database = require('knex')(configuration);
+
 router.get('/', (request, response) => {
   allPlaylists()
   .then(playlists => {
@@ -37,7 +41,7 @@ router.delete('/:id', (request, response) => {
   .catch(error => response.status(500).send({ error }));
 })
 
-router.post('/', (request, response) => {
+router.post('/', async (request, response) => {
   var body = request.body;
   var title = body.title;
 
@@ -46,6 +50,14 @@ router.post('/', (request, response) => {
       .send({ error: `Missing required attribute <title>` });
   }
 
+  let result = await database('playlists')
+    .where({title: title})
+
+  if (result[0]){
+    return response.status(409)
+      .send({error: `Playlist already exists with title: '${title}'`})
+  }
+  
   createPlaylist(title)
   .then(data => {
     response.status(201).send(data)
@@ -69,7 +81,7 @@ router.put('/:id', (request, response) => {
       .then(result => {
         response.status(200).send(result);
       })
-      .catch(error => response.status(500).send({ error })) 
+      .catch(error => response.status(500).send({ error }))
     } else {
       response.status(404).send({ error: 'Record not found' })
     }

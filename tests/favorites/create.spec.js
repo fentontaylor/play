@@ -66,23 +66,37 @@ describe("Test POST to favorites", () => {
       "artistName": "Queen",
     };
 
-    var res = await request(app)
+    const res1 = await request(app)
       .post("/api/v1/favorites")
       .send(body);
 
-    expect(res.statusCode).toBe(400)
-    expect(res.body).toMatchObject({ error: 'Missing required attribute <title>' })
+    expect(res1.statusCode).toBe(400)
+    expect(res1.body).toEqual({ error: 'Missing required attribute <title>' })
 
     // Missing <artistName>
     var body = {
       "title": "We Will Rock You"
     };
 
-    var res = await request(app)
+    const res2 = await request(app)
       .post("/api/v1/favorites")
       .send(body);
 
-    expect(res.statusCode).toBe(400)
-    expect(res.body).toMatchObject({ error: 'Missing required attribute <artistName>' })
+    expect(res2.statusCode).toBe(400)
+    expect(res2.body).toMatchObject({ error: 'Missing required attribute <artistName>' })
+  })
+
+  it("sad path: empty search result from musixmatch API", async () => {
+    var body = {
+      "title": "asdfasdf",
+      "artistName": "qazwsx"
+    }
+
+    const res = await request(app)
+      .post('/api/v1/favorites')
+      .send(body);
+    
+    expect(res.status).toBe(404);
+    expect(res.body).toEqual({ error: "No search results for title: 'asdfasdf', artistName: 'qazwsx'"})
   })
 })

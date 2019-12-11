@@ -48,7 +48,7 @@ router.post('/', (request, response) => {
 
   createPlaylist(title)
   .then(data => {
-    response.status(201).send(data[0])
+    response.status(201).send(data)
   })
   .catch(error => response.status(500).send({error}))
 });

@@ -3,7 +3,7 @@ var request = require("supertest");
 var app = require('../app');
 
 describe('Test the root path', () => {
-  test('It should respond to the GET method', async () => {
+  it('should respond to the GET method', async () => {
     const res = await request(app)
       .get("/");
 

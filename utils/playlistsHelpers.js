@@ -1,6 +1,11 @@
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
+const helpers = require('./playlistFavoritesHelpers');
+const countFavorites = helpers.countFavorites;
+const songAvgRating = helpers.songAvgRating;
+const allPlaylistFavorites = helpers.allPlaylistFavorites;
+const dateFormat = require('dateformat');
 
 async function findPlaylist(id) {
   try {
@@ -14,8 +19,14 @@ async function findPlaylist(id) {
 
 async function allPlaylists() {
   try {
-    return await database('playlists')
-      .columns('*');
+    let playlistIds = await database('playlists')
+        .pluck('id');
+
+    const promises = playlistIds.map(async (id) => {
+      let favoriteInfo = await playlistInfo(id)
+      return favoriteInfo
+    });
+    return Promise.all(promises)
   } catch (e) {
     return e;
   }
@@ -49,6 +60,29 @@ async function deletePlaylist(id) {
     return await database('playlists')
       .where({ id: id })
       .del();
+  } catch(e) {
+    return e;
+  }
+}
+
+async function playlistInfo(playlistId) {
+  try {
+    let info = await findPlaylist(playlistId);
+    let songCount = await countFavorites(playlistId);
+    let avgRating = await songAvgRating(playlistId);
+    let favorites = await allPlaylistFavorites(playlistId);
+    const dateFormat = require('dateformat');
+
+
+    return {
+      id: info.id,
+      title: info.title,
+      songCount: songCount,
+      songAvgRating: avgRating,
+      favorites: favorites,
+      createdAt: dateFormat(info.created_at, "isoDateTime"),
+      updatedAt: dateFormat(info.updated_at, "isoDateTime")
+    }
   } catch(e) {
     return e;
   }

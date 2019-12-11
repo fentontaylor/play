@@ -1,11 +1,14 @@
 var express = require('express');
 var router = express.Router();
 const helpers = require('../../../utils/playlistsHelpers');
-const findPlaylist = helpers.findPlaylist;
-const createPlaylist = helpers.createPlaylist;
-const deletePlaylist = helpers.deletePlaylist;
-const allPlaylists = helpers.allPlaylists;
-const updatePlaylist = helpers.updatePlaylist;
+const {
+  findPlaylist,
+  findPlaylistByTitle,
+  createPlaylist,
+  deletePlaylist,
+  allPlaylists,
+  updatePlaylist
+} = helpers;
 
 router.get('/', (request, response) => {
   allPlaylists()
@@ -46,11 +49,17 @@ router.post('/', (request, response) => {
       .send({ error: `Missing required attribute <title>` });
   }
 
-  createPlaylist(title)
-  .then(data => {
-    response.status(201).send(data)
+  findPlaylistByTitle(title)
+  .then(result => {
+    if (result) {
+      response.status(409)
+        .send({ error: `Playlist already exists with title: '${title}'` })
+    } else {
+      createPlaylist(title)
+      .then(data => response.status(201).send(data))
+      .catch(error => response.status(500).send({ error }))
+    }
   })
-  .catch(error => response.status(500).send({error}))
 });
 
 router.put('/:id', (request, response) => {
@@ -69,7 +78,7 @@ router.put('/:id', (request, response) => {
       .then(result => {
         response.status(200).send(result);
       })
-      .catch(error => response.status(500).send({ error })) 
+      .catch(error => response.status(500).send({ error }))
     } else {
       response.status(404).send({ error: 'Record not found' })
     }

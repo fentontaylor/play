@@ -68,7 +68,7 @@ async function songAvgRating(playlistId) {
 
 async function playlistInfo(playlistId) {
   try {
-    let info = await findPlaylist(playlistId);
+    let info = await getPlaylist(playlistId);
     let songCount = await countFavorites(playlistId);
     let avgRating = await songAvgRating(playlistId);
     let favorites = await allPlaylistFavorites(playlistId);
@@ -97,6 +97,16 @@ async function deletePlaylistFavorite(playlistId, favId) {
   }
 }
 
+async function getPlaylist(id) {
+  try {
+    let playlist = await database('playlists')
+      .where({ id: id });
+    return playlist[0];
+  } catch(e) {
+    return e;
+  }
+}
+
 module.exports = {
   findPlaylistFavorite: findPlaylistFavorite,
   createPlaylistFavorite: createPlaylistFavorite,
@@ -104,5 +114,7 @@ module.exports = {
   countFavorites: countFavorites,
   songAvgRating: songAvgRating,
   playlistInfo: playlistInfo,
-  deletePlaylistFavorite: deletePlaylistFavorite
+  deletePlaylistFavorite: deletePlaylistFavorite,
+  getPlaylist: getPlaylist,
+  findPlaylist: findPlaylist
 }

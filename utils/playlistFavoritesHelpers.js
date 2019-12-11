@@ -1,8 +1,6 @@
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
-const plHelpers = require('./playlistsHelpers');
-const findPlaylist = plHelpers.findPlaylist;
 const dateFormat = require('dateformat');
 
 async function findPlaylistFavorite(playlistId, favoriteId) {
@@ -68,7 +66,7 @@ async function songAvgRating(playlistId) {
 
 async function playlistInfo(playlistId) {
   try {
-    let info = await findPlaylist(playlistId);
+    let info = await findPlaylist_two(playlistId);
     let songCount = await countFavorites(playlistId);
     let avgRating = await songAvgRating(playlistId);
     let favorites = await allPlaylistFavorites(playlistId);
@@ -83,6 +81,16 @@ async function playlistInfo(playlistId) {
       updatedAt: dateFormat(info.updated_at, "isoDateTime")
     }
   } catch(e) {
+    return e;
+  }
+}
+
+async function findPlaylist_two(id) {
+  try {
+    let playlist = await database('playlists')
+      .where({ id: id });
+    return playlist[0];
+  } catch (e) {
     return e;
   }
 }

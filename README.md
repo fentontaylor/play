@@ -10,7 +10,7 @@
 1. [Contributors](#contributors)
 
 ## Introduction <a name="introduction"></a>
-
+Play is a simple API that allows users to create playlists, create favorites, and add favorites to playlists. To use the production application, jump straight to the [API documentation](#api_docs). Or if you want to tinker with the code, follow the setup instructions below.
 
 ## Initial Setup <a name="setup"></a>
 1) To get started using this app, you'll first need to clone it and install dependencies.
@@ -62,7 +62,7 @@ npm test
 https://looney-tunes.herokuapp.com
 ```
 
-### Endpoints:
+### Endpoints: <a name="endpoint-list"></a>
 
 #### Favorites
 - [POST /api/v1/favorites](#post_favorites)
@@ -76,7 +76,13 @@ https://looney-tunes.herokuapp.com
 - [PUT /api/v1/playlists/:id](#put_playlists)
 - [DELETE /api/v1/playlists/:id](#delete_playlists)
 
+#### PlaylistFavorites
+- [GET /api/v1/playlists/:id/favorites](#get_pf)
+- [POST /api/v1/playlists/:p_id/favorites/:f_id](#post_pf)
+- [DELETE /api/v1/playlists/:p_id/favorites/:f_id](#delete_pf)
+
 ### Create Favorite Request <a name="post_favorites"></a>
+[return to endpoint list](#endpoint-list)
 
 ```
 POST /api/v1/favorites
@@ -121,6 +127,7 @@ Status: 400
 ```
 
 ### Get Favorites Request <a name="get_favorites"></a>
+[return to endpoint list](#endpoint-list)
 
 ```
 GET /api/v1/favorites
@@ -172,6 +179,7 @@ Status: 404
 ```
 
 ### Get Favorite Request <a name="get_favorite"></a>
+[return to endpoint list](#endpoint-list)
 
 ```
 GET /api/v1/favorites/:id
@@ -212,6 +220,7 @@ Status: 404
 ```
 
 ### Delete Favorite Request <a name="delete_favorites"></a>
+[return to endpoint list](#endpoint-list)
 
 ```
 DELETE /api/v1/favorites/3
@@ -243,6 +252,7 @@ Status: 404
 ## Playlist Endpoints
 
 ### Create Playlist Request <a name="post_playlists"></a>
+[return to endpoint list](#endpoint-list)
 
 ```
 POST /api/v1/playlists
@@ -277,13 +287,22 @@ Status: 400
 {
   "error": "Missing required attribute <title>"
 }
+
+Status: 400
+
+{
+  "error": "Playlist already exists with title: 'some title'"
+}
 ```
 
 ### Get Playlists Request <a name="get_playlists"></a>
+[return to endpoint list](#endpoint-list)
 
 ```
 GET /api/v1/playlists
 ```
+
+Returns an array of playlists, including song count, average song rating, and associated favorites.
 
 #### Example
 ```
@@ -292,29 +311,47 @@ GET https://looney-tunes.herokuapp.com/api/v1/playlists
 ```
 #### Success Response
 ```
+Status: 200
+
 [
-    {
-        "id": 1,
-        "title": "Focus On the Task",
-        "created_at": "2019-12-06T06:20:18.476Z",
-        "updated_at": "2019-12-06T06:20:18.476Z"
-    },
-    {
-        "id": 2,
-        "title": "Wake Up Music",
-        "created_at": "2019-12-06T06:44:30.928Z",
-        "updated_at": "2019-12-06T06:44:30.928Z"
-    },
-    {
-        "id": 3,
-        "title": "Solo In Mexico",
-        "created_at": "2019-12-06T06:45:39.691Z",
-        "updated_at": "2019-12-06T06:45:39.691Z"
-    }
+  {
+    "id": 1,
+    "title": "Cleaning House",
+    "songCount": 2,
+    "songAvgRating": 27.5,
+    "favorites": [
+                    {
+                      "id": 1,
+                      "title": "We Will Rock You",
+                      "artistName": "Queen"
+                      "genre": "Rock",
+                      "rating": 25
+                    },
+                    {
+                      "id": 4,
+                      "title": "Back In Black",
+                      "artistName": "AC/DC"
+                      "genre": "Rock",
+                      "rating": 30
+                    }
+                  ],
+    "createdAt": 2019-11-26T16:03:43+00:00,
+    "updatedAt": 2019-11-26T16:03:43+00:00
+}
+  {
+    "id": 2,
+    "title": "Running Mix",
+    "songCount": 0,
+    "songAvgRating": 0,
+    "favorites": []
+    "createdAt": 2019-11-26T16:03:43+00:00,
+    "updatedAt": 2019-11-26T16:03:43+00:00
+  },
 ]
 ```
 
 ### PUT playlists request <a name="put_playlists"></a>
+[return to endpoint list](#endpoint-list)
 
 ```
 PUT `/api/v1/playlists/:id`
@@ -380,6 +417,7 @@ Status: 400
 ```
 
 ### Delete Playlist Request <a name="delete_playlist"></a>
+[return to endpoint list](#endpoint-list)
 
 ```
 DELETE /api/v1/playlists/:id
@@ -407,8 +445,131 @@ Status: 404
 }
 ```
 
-## Schema Design <a name="schema"></a>
+### Get Playlist Favorites Request <a name="get_pf"></a>
+[return to endpoint list](#endpoint-list)
 
+```
+GET /api/v1/playlists/:id/favorites
+```
+
+Returns info about playlist with specified ID, including song count, average song rating, and associated favorites.
+
+#### Example
+
+```
+GET https://looney-tunes.herokuapp.com/api/v1/playlists/1/favorites
+```
+
+#### Success Response
+
+```
+Status: 200
+
+{
+    "id": 1,
+    "title": "Cleaning House",
+    "songCount": 2,
+    "songAvgRating": 27.5,
+    "favorites": [
+                    {
+                      "id": 1,
+                      "title": "We Will Rock You",
+                      "artistName": "Queen"
+                      "genre": "Rock",
+                      "rating": 25
+                    },
+                    {
+                      "id": 4,
+                      "title": "Back In Black",
+                      "artistName": "AC/DC"
+                      "genre": "Rock",
+                      "rating": 30
+                    }
+                  ],
+    "createdAt": 2019-11-26T16:03:43+00:00,
+    "updatedAt": 2019-11-26T16:03:43+00:00
+}
+```
+
+#### Error Response
+```
+Status: 404
+{
+  "error": "Record not found"
+}
+```
+
+### Add Playlist Favorite Request <a name="post_pf"></a>
+[return to endpoint list](#endpoint-list)
+
+```
+POST /api/v1/playlists/:p_id/favorites/:f_id
+```
+
+Create a new playlist_favorite record with playlist_id: `p_id`, favorite_id: `f_id`.
+
+#### Example
+
+```
+POST https://looney-tunes.herokuapp.com/api/v1/playlists/1/favorites/2
+```
+
+#### Success Response
+
+```
+Status: 201
+
+{
+  "success": "{song title} has been added to {playlist title}"
+}
+```
+
+#### Error Responses
+
+```
+Status: 409
+
+{
+    "error": "Record already exists with playlist_id: 1, favorite_id: 2"
+}
+
+Status: 400
+
+{
+    "error": "Could not create record with playlist_id: 1, favorite_id: 412312"
+}
+```
+
+### Delete Playlist Favorite Request <a name="delete_pf"></a>
+[return to endpoint list](#endpoint-list)
+
+```
+DELETE /api/v1/playlists/:p_id/favorites/:f_id
+```
+
+#### Example
+```
+DELETE https://looney-tunes.herokuapp.com/api/v1/playlists/:p_id/favorites/:f_id
+```
+
+#### Success Response
+
+```
+Status: 204
+```
+
+#### Error Response
+
+```
+Status: 404
+
+{
+    "error": "Record not found."
+}
+```
+
+## Schema Design <a name="schema"></a>
+![image](https://user-images.githubusercontent.com/18686466/70660943-7672fd00-1c20-11ea-8d85-50ec4e204752.png)
 
 ## Tech Stack <a name="stack"></a>
 - [Node.js](https://nodejs.org/en/)

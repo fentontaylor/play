@@ -8,28 +8,45 @@ const database = require('knex')(configuration);
 
 describe("Test GET playlists", () => {
   beforeEach(async () => {
+    await database.raw("TRUNCATE TABLE playlist_favorites CASCADE");
     await database.raw("TRUNCATE TABLE playlists CASCADE");
+    await database.raw("TRUNCATE TABLE favorites CASCADE");
   });
 
   afterEach(async () => {
+    await database.raw("TRUNCATE TABLE playlist_favorites CASCADE");
     await database.raw("TRUNCATE TABLE playlists CASCADE");
-  });
+    await database.raw("TRUNCATE TABLE favorites CASCADE");  });
 
   it("returns a list of all playlists in the db", async () => {
-    let playlist1 = await database('playlists')
-      .insert({id: 1, title: 'Rock Your Socks Off'})
-      .returning('*')
+    await database('favorites')
+      .insert({ id: 1, title: 'Keep It Real', artist_name: 'SunSquabi', genre: 'Electronic', rating: 82 })
 
-    let playlist2 = await database('playlists')
-      .insert({id: 2, title: 'Wake Up Jams'})
-      .returning('*')
+    await database('favorites')
+      .insert({ id: 2, title: 'Open Rythms', artist_name: 'Bodies Of Water', genre: 'Indie', rating: 82 })
+
+    await database('playlists')
+      .insert({ id: 1, title: 'Focus On the Task' })
+
+    await database('playlists')
+      .insert({ id: 2, title: 'Sample Playlist' })
+
+    await database('playlist_favorites')
+      .insert({ id: 1, playlist_id: 1, favorite_id: 1 })
+
+    await database('playlist_favorites')
+      .insert({ id: 2, playlist_id: 2, favorite_id: 1 })
+
+    await database('playlist_favorites')
+      .insert({ id: 3, playlist_id: 2, favorite_id: 2 })
 
     var response = await request(app)
-    .get('/api/v1/playlists')
-      expect(response.status).toBe(200)
-      expect(response.body[0].id).toBe(1)
-      expect(response.body[0].title).toBe('Rock Your Socks Off')
-      expect(response.body[1].id).toBe(2)
-      expect(response.body[1].title).toBe('Wake Up Jams')
+      .get('/api/v1/playlists')
+
+    expect(response.body.length).toBe(2)
+    expect(response.body[1].favorites.length).toBe(2)
+    expect(response.body[0].title).toEqual("Focus On the Task")
+    expect(response.body[1].favorites[0].title).toEqual("Keep It Real")
+    expect(response.body[1].favorites[1].title).toEqual("Open Rythms")
   });
 });

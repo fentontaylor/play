@@ -1,0 +1,12 @@
+type Favorite {
+  id: Int
+  title: String!
+  artist_name: String!
+  genre: String
+  rating: Int
+}
+
+type Query {
+  favorites: [Favorite]
+  favorite(id: ID!): Favorite
+}

@@ -25,31 +25,8 @@ app.use('/api/v1/playlists', playlistsRouter);
 app.use('/api/v1/playlists/:playlistId/favorites', playlistFavoritesRouter);
 
 const graphqlHTTP = require('express-graphql');
-// const FormatError = require('easygraphql-format-error')
 const schema = require('./schema/schemaBuilder');
 const root = require('./schema/resolvers')
-
-// const formatError = new FormatError([
-//   {
-//     name: 'ID_NOT_FOUND',
-//     message: 'The record with the requested ID was not found.',
-//     statusCode: 404
-//   }
-// ])
-// const errorName = formatError.errorName
-
-
-// app.use('/api/v2/graphql', (req, res) => {
-//   graphqlHTTP({
-//     schema: schema,
-//     rootValue: root,
-//     graphiql: true,
-//     context: { errorName },
-//     formatError: (err) => {
-//       return formatError.getError(err)
-//     }
-//   })(req, res)
-// })
 
 app.use('/api/v2/graphql', (req, res) => {
   graphqlHTTP({

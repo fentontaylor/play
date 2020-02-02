@@ -24,4 +24,13 @@ app.use('/api/v1/favorites', favoritesRouter);
 app.use('/api/v1/playlists', playlistsRouter);
 app.use('/api/v1/playlists/:playlistId/favorites', playlistFavoritesRouter);
 
+const graphqlHTTP = require('express-graphql');
+const { schema, root } = require('./lib/schema');
+
+app.use('/api/v2/graphql', graphqlHTTP({
+  schema: schema,
+  rootValue: root,
+  graphiql: true
+}))
+
 module.exports = app;

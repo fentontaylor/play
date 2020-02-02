@@ -32,8 +32,6 @@ describe("Test /api/v2/graphql query favorites", () => {
       }
     }
 
-    console.log(expected.data.favorites[0])
-
     const query = 'query{favorites{id title artist_name genre rating}}'
     const response = await request(app)
       .post(`/api/v2/graphql?query=${query}`)

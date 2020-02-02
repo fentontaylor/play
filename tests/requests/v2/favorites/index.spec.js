@@ -5,7 +5,7 @@ const environment = process.env.NODE_ENV || 'test';
 const configuration = require('../../../../knexfile')[environment];
 const database = require('knex')(configuration);
 
-describe("Test GET favorites", () => {
+describe("Test /api/v2/graphql query favorites", () => {
   beforeEach(async () => {
     await database.raw("TRUNCATE TABLE favorites CASCADE");
   });

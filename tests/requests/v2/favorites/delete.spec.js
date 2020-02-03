@@ -38,7 +38,7 @@ describe("Test /api/v2/graphql mutation deleteFavorite", () => {
     expect(response.body).toEqual(expected);
   });
 
-  it("returns null data if id is not found", async () => {
+  it("returns custom error if id is not found", async () => {
     const query = 'mutation{deleteFavorite(id: 100)}'
     const response = await request(app)
       .post(`/api/v2/graphql?query=${query}`);

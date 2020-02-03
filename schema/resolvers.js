@@ -12,26 +12,29 @@ const resolvers = {
     return favoriteSongs();
   },
 
-  favorite: (args) => {
-    return favoriteSong(args.id);
+  favorite: async (args, { errorName }) => {
+    const result = await favoriteSong(args.id);
+    if (result === undefined) {
+      throw new Error(errorName.FAVORITE_NOT_FOUND)
+    }
+    return result
   },
 
   createFavorite: async (args) => {
     const data = await fetchSongInfo(args.title, args.artistName);
     if (data.message.body) {
-      let fav = new Favorite(data);
-      let newFavorite = await createFavorite(fav);
+      const fav = new Favorite(data);
+      const newFavorite = await createFavorite(fav);
       return newFavorite;
     }
   },
-  
+
   deleteFavorite: async (args, { errorName }) => {
-    let result = await destroyFavorite(args.id);
+    const result = await destroyFavorite(args.id);
     if (result === 0) {
       throw new Error(errorName.FAVORITE_NOT_FOUND);
-    } else {
-      return `Deleted favorite with id: ${result}`;
     }
+    return `Deleted favorite with id: ${result}`;
   }
 };
 

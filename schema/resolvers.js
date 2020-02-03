@@ -11,9 +11,11 @@ const resolvers = {
   favorites: () => {
     return favoriteSongs();
   },
+
   favorite: (args) => {
     return favoriteSong(args.id);
   },
+
   createFavorite: async (args) => {
     const data = await fetchSongInfo(args.title, args.artistName);
     if (data.message.body) {
@@ -22,6 +24,7 @@ const resolvers = {
       return newFavorite;
     }
   },
+  
   deleteFavorite: async (args, { errorName }) => {
     let result = await destroyFavorite(args.id);
     if (result === 0) {

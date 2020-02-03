@@ -79,8 +79,7 @@ describe('favoritesHelpers functions', () => {
       expect(favorites[0].rating).toBe(98);
       expect(favorites[1].title).toBe('Africa')
 
-      let res = await destroyFavorite(1)
-      console.log(res)
+      await destroyFavorite(1)
       var postDestroyFavorites = await favoriteSongs()
 
       expect(postDestroyFavorites[0].id).toBe(2);

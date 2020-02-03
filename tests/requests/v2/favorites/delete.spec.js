@@ -18,7 +18,7 @@ describe("Test /api/v2/graphql mutation deleteFavorite", () => {
     await database.raw("TRUNCATE TABLE favorites CASCADE");
   });
 
-  it.only("deletes a single favorite by id", async () => {
+  it("deletes a single favorite by id", async () => {
 
     await database('favorites')
       .insert({ id: 1, title: 'Thunderstruck', artist_name: 'AC/DC', genre: 'Rock', rating: 98 });
@@ -39,7 +39,12 @@ describe("Test /api/v2/graphql mutation deleteFavorite", () => {
   });
 
   it("returns null data if id is not found", async () => {
-    // expect(response.status).toBe(404)
-    // expect(response.body.error).toBe('Record not found.')
+    const query = 'mutation{deleteFavorite(id: 100)}'
+    const response = await request(app)
+      .post(`/api/v2/graphql?query=${query}`);
+
+    const errorMessage = response.body.errors[0];
+    expect(errorMessage.statusCode).toBe(404);
+    expect(errorMessage.message).toBe("Record not found with provided ID.");
   });
 });

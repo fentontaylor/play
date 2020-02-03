@@ -6,7 +6,7 @@ const fetchSongInfo = require("../../../utils/musixService");
 const favoritesHelpers = require("../../../utils/favoritesHelpers");
 const favoriteSongs = favoritesHelpers.favoriteSongs;
 const favoriteSong = favoritesHelpers.favoriteSong;
-const seekAndDestroy = favoritesHelpers.seekAndDestroy;
+const destroyFavorite = favoritesHelpers.destroyFavorite;
 const createFavorite = favoritesHelpers.createFavorite;
 
 router.get('/', (request, response) => {
@@ -71,7 +71,7 @@ router.delete('/:id', (request, response) => {
   .then(favorite => {
     if (favorite) {
       let targetId = request.params.id
-      seekAndDestroy(targetId)
+      destroyFavorite(targetId)
       .then(() => response.status(204).send())
       .catch(error => response.status(500).send({ error }))
     } else {

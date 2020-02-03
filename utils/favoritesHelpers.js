@@ -33,7 +33,7 @@ async function createFavorite(fav) {
   }
 }
 
-async function seekAndDestroy(targetId) {
+async function destroyFavorite(targetId) {
   try {
     return await database('favorites').where({ id: targetId }).del()
   } catch (e) {
@@ -45,5 +45,5 @@ module.exports = {
   favoriteSongs: favoriteSongs,
   favoriteSong: favoriteSong,
   createFavorite: createFavorite,
-  seekAndDestroy: seekAndDestroy
+  destroyFavorite: destroyFavorite
 }

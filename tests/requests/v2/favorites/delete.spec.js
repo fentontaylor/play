@@ -26,15 +26,16 @@ describe("Test /api/v2/graphql mutation deleteFavorite", () => {
     var favorites = await database('favorites');
     expect(favorites.length).toBe(1);
 
-    const query = 'mutation{deleteFavorite(id: 1){id title}}'
+    const query = 'mutation{deleteFavorite(id: 1)}'
     const response = await request(app)
       .post(`/api/v2/graphql?query=${query}`);
 
     favorites = await database('favorites');
     expect(favorites.length).toBe(0);
 
-    console.log(response.body)
+    const expected = { data: { deleteFavorite: 'Deleted favorite with id: 1' } }
     expect(response.status).toBe(200);
+    expect(response.body).toEqual(expected);
   });
 
   it("returns null data if id is not found", async () => {

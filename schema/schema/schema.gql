@@ -13,4 +13,5 @@ type Query {
 
 type Mutation {
   createFavorite(title: String!, artistName: String!): Favorite
+  deleteFavorite(id: ID!): String!
 }

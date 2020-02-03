@@ -3,7 +3,8 @@ const Favorite = require('../models/favorite')
 const {
   favoriteSongs,
   favoriteSong,
-  createFavorite
+  createFavorite,
+  destroyFavorite
 } = require('../utils/favoritesHelpers')
 
 const resolvers = {
@@ -20,6 +21,10 @@ const resolvers = {
       let newFavorite = await createFavorite(fav);
       return newFavorite;
     }
+  },
+  deleteFavorite: async (args) => {
+    let result = await destroyFavorite(args.id)
+    return `Deleted favorite with id: ${result}`
   }
 };
 

@@ -8,7 +8,7 @@ const fetchSongInfo = async function(title, artist) {
       `&q_artist=${artist}` +
       `&apikey=${key}`;
     let res = await fetch(url);
-    return res.json();
+    return res;
   } catch(e) {
     return e;
   }

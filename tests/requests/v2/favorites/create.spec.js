@@ -17,14 +17,14 @@ describe("Test /api/v2/graphql mutation createFavorite", () => {
   });
 
   it("happy path", async () => {
-    const noFavs = await database('favorites').first()
+    const noFavs = await database('favorites').first();
     expect(noFavs).toBeUndefined();
 
     const mutation = 'mutation{createFavorite(title: "We Will Rock You", artistName: "Queen")' +
-      '{title artist_name rating genre}}'
+      '{title artist_name rating genre}}';
     const res = await request(app)
-      .post(`/api/v2/graphql?query=${mutation}`)
-    console.log(res.body)
+      .post(`/api/v2/graphql?query=${mutation}`);
+
     const expected = {
       data: {
         createFavorite: {
@@ -35,8 +35,9 @@ describe("Test /api/v2/graphql mutation createFavorite", () => {
         }
       }
     }
+
     expect(res.statusCode).toBe(200);
-    expect(res.body).toEqual(expected)
+    expect(res.body).toEqual(expected);
 
     const fav = await database('favorites').first();
     expect(fav.title).toBe("We Will Rock You");
@@ -45,59 +46,46 @@ describe("Test /api/v2/graphql mutation createFavorite", () => {
     expect(fav.rating).toBe(78);
   })
 
-  it.skip("happy path with default genre", async () => {
-    const body = {
-      "title": "Under Pressure",
-      "artistName": "Vanilla Ice vs. Queen Bowie"
-    };
-
+  it("happy path with default genre", async () => {
+    const mutation = 'mutation{createFavorite(title: "Under Pressure", artistName: "Vanilla Ice vs. Queen Bowie")' +
+      '{title artist_name rating genre}}';
     const res = await request(app)
-      .post("/api/v1/favorites")
-      .send(body);
+      .post(`/api/v2/graphql?query=${mutation}`);
 
     const fav = await database('favorites').first();
-
-    expect(res.statusCode).toBe(201);
-    expect(fav.genre).toBe("Unknown");
+    const expected = {
+      data: {
+        createFavorite: {
+          title: 'Under Pressure',
+          artist_name: 'Vanilla Ice vs. Queen Bowie',
+          rating: 78,
+          genre: 'Unknown'
+        }
+      }
+    }
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual(expected);
   })
 
-  it.skip("sad path: missing required attribute", async () => {
+  it("sad path: missing required attribute", async () => {
     // Missing <title>
-    var body = {
-      "artistName": "Queen",
-    };
-
+    const mutation1 = 'mutation{createFavorite(artistName: "Vanilla Ice vs. Queen Bowie")' +
+      '{title artist_name rating genre}}';
     const res1 = await request(app)
-      .post("/api/v1/favorites")
-      .send(body);
+      .post(`/api/v2/graphql?query=${mutation1}`);
 
     expect(res1.statusCode).toBe(400)
-    expect(res1.body).toEqual({ error: 'Missing required attribute <title>' })
+    const errorMessage1 = res1.body.errors[0].message
+    expect(errorMessage1).toBe('Field "createFavorite" argument "title" of type "String!" is required, but it was not provided.')
 
     // Missing <artistName>
-    var body = {
-      "title": "We Will Rock You"
-    };
-
+    const mutation2 = 'mutation{createFavorite(title: "Under Pressure")' +
+      '{title artist_name rating genre}}';
     const res2 = await request(app)
-      .post("/api/v1/favorites")
-      .send(body);
+      .post(`/api/v2/graphql?query=${mutation2}`);
 
     expect(res2.statusCode).toBe(400)
-    expect(res2.body).toMatchObject({ error: 'Missing required attribute <artistName>' })
-  })
-
-  it.skip("sad path: empty search result from musixmatch API", async () => {
-    var body = {
-      "title": "asdfasdf",
-      "artistName": "qazwsx"
-    }
-
-    const res = await request(app)
-      .post('/api/v1/favorites')
-      .send(body);
-
-    expect(res.status).toBe(404);
-    expect(res.body).toEqual({ error: "No search results for title: 'asdfasdf', artistName: 'qazwsx'" })
+    const errorMessage2 = res2.body.errors[0].message
+    expect(errorMessage2).toBe('Field "createFavorite" argument "artistName" of type "String!" is required, but it was not provided.')
   })
 })

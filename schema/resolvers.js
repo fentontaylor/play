@@ -20,13 +20,14 @@ const resolvers = {
     return result
   },
 
-  createFavorite: async (args) => {
+  createFavorite: async (args, { errorName }) => {
     const data = await fetchSongInfo(args.title, args.artistName);
-    if (data.message.body) {
-      const fav = new Favorite(data);
-      const newFavorite = await createFavorite(fav);
-      return newFavorite;
+    if (!data.message.body) {
+      throw new Error(errorName.EMPTY_SONG_DATA)
     }
+    const fav = new Favorite(data);
+    const newFavorite = await createFavorite(fav);
+    return newFavorite;
   },
 
   deleteFavorite: async (args, { errorName }) => {

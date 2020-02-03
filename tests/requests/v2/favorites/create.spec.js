@@ -88,4 +88,15 @@ describe("Test /api/v2/graphql mutation createFavorite", () => {
     const errorMessage2 = res2.body.errors[0].message
     expect(errorMessage2).toBe('Field "createFavorite" argument "artistName" of type "String!" is required, but it was not provided.')
   })
+
+  it('sad path: fetchSongInfo does not find song', async () => {
+    const mutation = 'mutation{createFavorite(title: "askjdfakjf", artistName: "asjdfhajsdf")' +
+      '{title artist_name rating genre}}';
+    const res = await request(app)
+      .post(`/api/v2/graphql?query=${mutation}`);
+
+    const errorMessage = res.body.errors[0];
+    expect(errorMessage.statusCode).toBe(400);
+    expect(errorMessage.message).toBe("Could not fetch song data with given 'title' and 'artistName'.");
+  })
 })

@@ -1,25 +1,41 @@
-const fetchSongInfo = require('../utils/musixService')
-const Favorite = require('../models/favorite')
+const fetchSongInfo = require('../utils/musixService');
+const Favorite = require('../models/favorite');
 const {
   favoriteSongs,
   favoriteSong,
-  createFavorite
-} = require('../utils/favoritesHelpers')
+  createFavorite,
+  destroyFavorite
+} = require('../utils/favoritesHelpers');
 
 const resolvers = {
   favorites: () => {
     return favoriteSongs();
   },
-  favorite: (args) => {
-    return favoriteSong(args.id);
-  },
-  createFavorite: async (args) => {
-    const data = await fetchSongInfo(args.title, args.artistName);
-    if (data.message.body) {
-      let fav = new Favorite(data);
-      let newFavorite = await createFavorite(fav);
-      return newFavorite;
+
+  favorite: async (args, { errorName }) => {
+    const result = await favoriteSong(args.id);
+    if (result === undefined) {
+      throw new Error(errorName.FAVORITE_NOT_FOUND)
     }
+    return result
+  },
+
+  createFavorite: async (args, { errorName }) => {
+    const data = await fetchSongInfo(args.title, args.artistName);
+    if (!data.message.body) {
+      throw new Error(errorName.EMPTY_SONG_DATA)
+    }
+    const fav = new Favorite(data);
+    const newFavorite = await createFavorite(fav);
+    return newFavorite;
+  },
+
+  deleteFavorite: async (args, { errorName }) => {
+    const result = await destroyFavorite(args.id);
+    if (result === 0) {
+      throw new Error(errorName.FAVORITE_NOT_FOUND);
+    }
+    return `Deleted favorite with id: ${args.id}`;
   }
 };
 

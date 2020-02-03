@@ -51,12 +51,14 @@ describe("Test /api/v2/graphql query favorite", () => {
     expect(response2.body).toEqual(expected2)
   });
 
-  it.skip("returns a 404 if id is not found", async () => {
+  it("returns custom error if id is not found", async () => {
     const query = 'query{favorite(id: 100){id title artist_name genre rating}}'
     const response = await request(app)
       .post(`/api/v2/graphql?query=${query}`)
 
-    // expect(response.status).toBe(404)
-    expect(response.body).toEqual({ error: 'Favorite with id: 100 not found.' })
+    const errorMessage = response.body.errors[0];
+
+    expect(errorMessage.statusCode).toBe(404);
+    expect(errorMessage.message).toBe("Record not found with provided ID.");
   });
 });

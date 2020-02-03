@@ -5,7 +5,7 @@ const helpers = require('../../utils/favoritesHelpers');
 const favoriteSongs = helpers.favoriteSongs;
 const favoriteSong = helpers.favoriteSong;
 const createFavorite = helpers.createFavorite;
-const seekAndDestroy = helpers.seekAndDestroy;
+const destroyFavorite = helpers.destroyFavorite;
 
 
 describe('favoritesHelpers functions', () => {
@@ -18,7 +18,7 @@ describe('favoritesHelpers functions', () => {
 
     let fave2 = await database('favorites')
       .insert({id: 2, title: 'Africa', artist_name: 'Toto', genre: 'pop', rating: 100})
-    .returning(['id', 'title', 'artist_name', 'genre', 'rating'])
+      .returning(['id', 'title', 'artist_name', 'genre', 'rating'])
 
   });
 
@@ -29,6 +29,7 @@ describe('favoritesHelpers functions', () => {
   describe('favoriteSongs', () => {
     it('returns a list of all favorite songs', async () => {
       const favorites = await favoriteSongs();
+      expect(favorites.length).toBe(2);
       expect(favorites[0].id).toBe(1);
       expect(favorites[0].title).toBe('Thunderstruck');
       expect(favorites[0].artist_name).toBe('AC/DC');
@@ -46,7 +47,6 @@ describe('favoritesHelpers functions', () => {
       expect(favorite.artist_name).toBe('Toto');
       expect(favorite.genre).toBe('pop');
       expect(favorite.rating).toBe(100);
-      expect(favorite[1]).toBeUndefined()
     })
   })
 
@@ -66,11 +66,10 @@ describe('favoritesHelpers functions', () => {
       expect(newFavorite.artist_name).toBe('Queen');
       expect(newFavorite.genre).toBe('Arena Rock');
       expect(newFavorite.rating).toBe(78);
-      expect(newFavorite[1]).toBeUndefined()
     })
   })
 
-  describe('seekAndDestroy', () => {
+  describe('destroyFavorite', () => {
     it('deletes a favorite from the database', async() => {
       var favorites = await favoriteSongs();
       expect(favorites[0].id).toBe(1);
@@ -80,7 +79,8 @@ describe('favoritesHelpers functions', () => {
       expect(favorites[0].rating).toBe(98);
       expect(favorites[1].title).toBe('Africa')
 
-      await seekAndDestroy(1)
+      let res = await destroyFavorite(1)
+      console.log(res)
       var postDestroyFavorites = await favoriteSongs()
 
       expect(postDestroyFavorites[0].id).toBe(2);

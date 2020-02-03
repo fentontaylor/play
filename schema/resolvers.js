@@ -35,7 +35,7 @@ const resolvers = {
     if (result === 0) {
       throw new Error(errorName.FAVORITE_NOT_FOUND);
     }
-    return `Deleted favorite with id: ${result}`;
+    return `Deleted favorite with id: ${args.id}`;
   }
 };
 

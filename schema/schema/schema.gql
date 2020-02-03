@@ -10,3 +10,7 @@ type Query {
   favorites: [Favorite]
   favorite(id: ID!): Favorite
 }
+
+type Mutation {
+  createFavorite(title: String!, artistName: String!): Favorite
+}

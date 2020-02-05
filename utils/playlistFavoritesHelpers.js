@@ -66,11 +66,13 @@ async function songAvgRating(playlistId) {
 
 async function playlistInfo(playlistId) {
   try {
-    let info = await findPlaylist_two(playlistId);
-    let songCount = await countFavorites(playlistId);
-    let avgRating = await songAvgRating(playlistId);
-    let favorites = await allPlaylistFavorites(playlistId);
-
+    let results = Promise.all([
+      findPlaylist_two(playlistId),
+      countFavorites(playlistId),
+      songAvgRating(playlistId),
+      allPlaylistFavorites(playlistId),
+    ]);
+    let [info, songCount, avgRating, favorites] = await results;
     return {
       id: info.id,
       title: info.title,

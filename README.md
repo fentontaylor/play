@@ -53,6 +53,8 @@ npm test
 ```
 
 ## API Documentation <a name="api_docs"></a>
+<details>
+  <summary>V1: RESTful API</summary>
 
 ### All Requests
 
@@ -567,6 +569,238 @@ Status: 404
     "error": "Record not found."
 }
 ```
+</details>
+
+<details>
+  <summary>V2: GraphQL API</summary>
+  
+  ### Base URL
+  ```
+  https://looney-tunes.herokuapp.com/api/v2/graphql
+  ```
+  Navigate to the base url to interact with the API using [GraphiQL](https://looney-tunes.herokuapp.com/api/v2/graphql). Or, 
+  send requests with the the following queries and mutations as query params: `?query=<query.`
+  
+  ### Queries
+  ### query { favorites }
+  Returns an index of all favorites.
+  
+  #### Example
+  ```
+  query {
+    favorites {
+      id
+      title
+      artist_name
+      rating
+      genre
+    }
+  }
+  ```
+  
+  #### Success Response
+  ```json
+  {
+    "data": {
+      "favorites": [
+        {
+          "id": 2,
+          "title": "Rollout",
+          "artist_name": "Ludacris",
+          "rating": 23,
+          "genre": "Unknown"
+        },
+        {
+          "id": 5,
+          "title": "Never Gonna Give You Up",
+          "artist_name": "Rick Astley",
+          "rating": 62,
+          "genre": "Adult Contemporary"
+        }, ...
+      ]
+    }
+  }
+  ```
+  
+  ### query { favorite(id: ID) }
+  Returns a single favorite by ID. ID can be an integer or a string of an integer.
+  
+  #### Example
+  ```
+  query {
+    favorite(id: 5) {
+      id
+      title
+      artist_name
+      rating
+      genre
+    }
+  }
+  ```
+  #### Success Response
+  ```json
+  {
+    "data": {
+      "favorite": {
+        "id": 5,
+        "title": "Never Gonna Give You Up",
+        "artist_name": "Rick Astley",
+        "rating": 62,
+        "genre": "Adult Contemporary"
+      }
+    }
+  }
+  ```
+  
+  #### Error Responses
+  ```json
+  ### Record not found
+  
+  {
+    "errors": [
+      {
+        "message": "Record not found with provided ID.",
+        "statusCode": 404
+      }
+    ],
+    "data": {
+      "favorite": null
+    }
+  }
+  
+  ### Missing required ID
+  
+  {
+    "errors": [
+      {
+        "message": "Field \"favorite\" argument \"id\" of type \"ID!\" is required, but it was not provided.",
+        "locations": [
+          {
+            "line": 2,
+            "column": 3
+          }
+        ]
+      }
+    ]
+  }
+  ```
+  
+  ### Mutations
+  ### mutation { createFavorite(title: String, artistName: String) }
+  This mutation queries the musixmatch API to get the `rating` and `genre` of the song. `title` and `artistName` are required arguments.
+  
+  #### Example
+  ```
+  mutation {
+    createFavorite(title: "One", artistName: "Metallica") {
+      id
+      title
+      artist_name
+      rating
+      genre
+    }
+  }
+  ```
+  
+  #### Success Response
+  ```json
+  {
+    "data": {
+      "createFavorite": {
+        "id": 14,
+        "title": "One",
+        "artist_name": "Metallica",
+        "rating": 51,
+        "genre": "Unknown"
+      }
+    }
+  }
+  ```
+  
+  #### Error Responses
+  ```json
+  ### Missing argument
+  
+  {
+    "errors": [
+      {
+        "message": "Field \"createFavorite\" argument \"artistName\" of type \"String!\" is required, but it was not provided.",
+        "locations": [
+          {
+            "line": 2,
+            "column": 3
+          }
+        ]
+      }
+    ]
+  }
+  
+  ### Empty response from musixmatch
+  
+  {
+    "errors": [
+      {
+        "message": "Could not fetch song data with given 'title' and 'artistName'.",
+        "statusCode": 400
+      }
+    ],
+    "data": {
+      "createFavorite": null
+    }
+  }
+  ```
+  
+  ### mutation { deleteFavorite(id: ID) }
+  This mutation deletes the favorite with the given ID. `id` is a required argument.
+  
+  #### Example
+  ```
+  mutation {
+    deleteFavorite(id: 9)
+  }
+  ```
+  
+  #### Success Response
+  ```json
+  {
+    "data": {
+      "deleteFavorite": "Deleted favorite with id: 9"
+    }
+  }
+  ```
+  
+  #### Error Responses
+  ```json
+  ### Missing id argument
+  
+  {
+    "errors": [
+      {
+        "message": "Field \"deleteFavorite\" argument \"id\" of type \"ID!\" is required, but it was not provided.",
+        "locations": [
+          {
+            "line": 2,
+            "column": 3
+          }
+        ]
+      }
+    ]
+  }
+  
+  ### Record not found
+  
+  {
+    "errors": [
+      {
+        "message": "Record not found with provided ID.",
+        "statusCode": 404
+      }
+    ],
+    "data": null
+  }
+  ```
+  
+ </details>
 
 ## Schema Design <a name="schema"></a>
 ![image](https://user-images.githubusercontent.com/18686466/70660943-7672fd00-1c20-11ea-8d85-50ec4e204752.png)
